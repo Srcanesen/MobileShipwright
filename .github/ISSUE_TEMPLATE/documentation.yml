@@ -1,0 +1,40 @@
+name: Documentation
+description: Report missing, unclear, or incorrect playbook documentation.
+title: "[Docs] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste secrets, credentials, tokens, or raw vendor responses here.**
+
+        Report suspected security vulnerabilities privately through [SECURITY.md](https://github.com/Srcanesen/mobile-app-ship-playbook/blob/main/SECURITY.md) instead of opening an issue.
+  - type: input
+    id: topic
+    attributes:
+      label: Topic
+      description: Which page or section is affected? For example `README.md`, `README.tr.md`, `skills/mobile-app-ship/SKILL.md`, or a `references/` file.
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Issue type
+      options:
+        - Missing
+        - Incorrect
+        - Unclear
+        - Outdated
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What is wrong or missing
+      description: Describe the documentation problem. Do not include secrets, personal data, or target-app state.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested change
+      description: Optionally propose corrected or additional text.

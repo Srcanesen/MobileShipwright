@@ -1,0 +1,69 @@
+name: Bug report
+description: Report a defect in the playbook, its scripts, or its validation.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste secrets, credentials, tokens, private keys, signing material, target-app state, or raw vendor responses here.**
+
+        Report suspected security vulnerabilities privately through [SECURITY.md](https://github.com/Srcanesen/mobile-app-ship-playbook/blob/main/SECURITY.md) instead of opening an issue.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One clear sentence describing the defect.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include sanitized output only.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands and inputs. Use `<target-app-dir>` placeholders; do not include real paths, app names, or provider data.
+      placeholder: |
+        1. scripts/mobile-app-ship preflight --target "<target-app-dir>" --platform ios --language en
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Content of the `VERSION` file or the commit SHA you tested.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the playbook is affected?
+      options:
+        - Core skill (skills/mobile-app-ship)
+        - Scripts / validation
+        - Harness integration
+        - Documentation / README
+        - Other
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Sanitized read-back or command output that supports the report. Remove all secrets, personal data, and raw provider responses before pasting.
+      placeholder: "Evidence ID and sanitized output, or 'none'."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, harness, and tool versions. No personal paths.
+      placeholder: "macOS arm64, Pi, ..."

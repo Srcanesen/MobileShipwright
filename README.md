@@ -9,23 +9,32 @@
 <p align="center">An agent-first, evidence-led playbook for taking Flutter/Firebase mobile apps through independent App Store and Google Play delivery paths.</p>
 
 <p align="center">
+  <a href="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   <a href="VERSION"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version 0.1.0"></a>
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="Tested on macOS arm64">
 </p>
 
-## Project status
+## Contents
 
-> **Active development.** This is a 0.x project. Its guidance and interfaces will continue to evolve as more real shipping workflows are exercised and reviewed.
-
-- **iOS:** The iOS path has been used with a real app through submission to **App Review in App Store Connect**. This confirms that the workflow reached review submission; it does not claim App Store approval or public release.
-- **Android:** The Google Play path is documented, but it has **not yet been tested end to end with a real Play submission**. Treat the Android guidance as not yet production-validated and report any gaps you find.
-
-This repository is the playbook, not the app being shipped. Give it to your coding agent by cloning or opening **this repository in the agent harness**, then name the separate app directory explicitly as `<target-app-dir>`. The target app remains separate; repository templates are inactive examples and are not discovered, installed, copied, authenticated, or activated automatically.
-
-The canonical entry point is [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md). Product boundaries and metrics live in [PRODUCT.md](PRODUCT.md). Keep binaries, OAuth state, tokens, user configuration, credentials, target state, and raw vendor responses out of this repository and Git.
+- [Give the playbook to an agent](#give-the-playbook-to-an-agent)
+- [Project status](#project-status)
+- [Safe end-to-end flow](#safe-end-to-end-flow)
+- [What commands do—and do not do](#what-commands-doand-do-not-do)
+- [Authentication: safe, ordered, and user-controlled](#authentication-safe-ordered-and-user-controlled)
+- [Harnesses and inactive templates](#harnesses-and-inactive-templates)
+- [State, resume, and evidence](#state-resume-and-evidence)
+- [Approval taxonomy](#approval-taxonomy)
+- [Common scenarios and troubleshooting](#common-scenarios-and-troubleshooting)
+- [Validate this repository](#validate-this-repository)
 
 ## Give the playbook to an agent
+
+The playbook is published as a tested Agent Skill. Install it with the skills CLI:
+
+```bash
+npx skills add Srcanesen/mobile-app-ship-playbook --skill mobile-app-ship
+```
 
 Tell the agent the target path and desired scope. It must read in this order:
 
@@ -47,6 +56,17 @@ Use these copy-ready prompts after cloning `https://github.com/Srcanesen/mobile-
 **Read-only audit**
 
 > Audit the app at `<target-app-dir>` using this playbook. Read the required onboarding chain and run read-only discovery only. Report missing readiness, unknown outcomes, and the next safe step. Do not write target files, install tools, authenticate, or call provider mutation tools.
+
+## Project status
+
+> **Active development.** This is a 0.x project. Its guidance and interfaces will continue to evolve as more real shipping workflows are exercised and reviewed.
+
+- **iOS:** The iOS path has been used with a real app through submission to **App Review in App Store Connect**. This confirms that the workflow reached review submission; it does not claim App Store approval or public release.
+- **Android:** The Google Play path is documented, but it has **not yet been tested end to end with a real Play submission**. Treat the Android guidance as not yet production-validated and report any gaps you find.
+
+This repository is the playbook, not the app being shipped. Give it to your coding agent by cloning or opening **this repository in the agent harness**, then name the separate app directory explicitly as `<target-app-dir>`. The target app remains separate; repository templates are inactive examples and are not discovered, installed, copied, authenticated, or activated automatically.
+
+The canonical entry point is [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md). Product boundaries and metrics live in [PRODUCT.md](PRODUCT.md). Keep binaries, OAuth state, tokens, user configuration, credentials, target state, and raw vendor responses out of this repository and Git.
 
 ## Safe end-to-end flow
 

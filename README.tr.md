@@ -9,23 +9,32 @@
 <p align="center">Flutter/Firebase mobil uygulamalarını App Store ve Google Play'e güvenli, denetlenebilir ve kanıta dayalı biçimde taşımak için agent odaklı bir yayınlama oyun kitabı.</p>
 
 <p align="center">
+  <a href="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT lisansı"></a>
   <a href="VERSION"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Sürüm 0.1.0"></a>
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="macOS arm64 üzerinde test edildi">
 </p>
 
-## Proje durumu
+## İçindekiler
 
-> **Aktif olarak geliştiriliyor.** Bu proje hâlâ 0.x sürümündedir. Daha fazla gerçek yayınlama akışı uygulandıkça ve incelendikçe rehber ve arayüzler gelişmeye devam edecektir.
-
-- **iOS:** iOS akışı, gerçek bir uygulamanın **App Store Connect üzerinden App Review'e gönderilmesine** kadar kullanıldı. Bu, akışın incelemeye gönderim adımına ulaştığını doğrular; App Store onayı veya herkese açık yayın anlamına gelmez.
-- **Android:** Google Play akışı belgelenmiştir ancak **gerçek bir Play gönderimiyle henüz uçtan uca test edilmemiştir**. Android rehberini üretim ortamında henüz doğrulanmamış kabul edin ve karşılaştığınız eksikleri bildirin.
-
-Bu depo yayınlanacak uygulama değil, coding agent'a verilen yayınlama oyun kitabıdır. **Repoyu kullandığınız agent ortamında klonlayın veya açın**, ardından uygulamanın ayrı klasörünü açıkça `<target-app-dir>` olarak belirtin. Hedef uygulama ayrı kalır; repodaki şablonlar yalnızca pasif örneklerdir. Otomatik olarak bulunmaz, kurulmaz, kopyalanmaz, kimlik doğrulaması yapmaz veya etkinleşmez.
-
-Resmî giriş noktası [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md) dosyasıdır. Ürün sınırı ve ölçütleri [PRODUCT.md](PRODUCT.md) içindedir. Binary'leri, OAuth durumunu, token'ları, kullanıcı ayarlarını, kimlik bilgilerini, hedef durumunu ve ham sağlayıcı yanıtlarını bu deponun ve Git'in dışında tutun.
+- [Oyun kitabını agent'a verin](#oyun-kitabını-agenta-verin)
+- [Proje durumu](#proje-durumu)
+- [Güvenli uçtan uca akış](#güvenli-uçtan-uca-akış)
+- [Komutların yaptığı ve yapmadığı işler](#komutların-yaptığı-ve-yapmadığı-işler)
+- [Kimlik doğrulama: güvenli, sıralı, kullanıcı kontrolünde](#kimlik-doğrulama-güvenli-sıralı-kullanıcı-kontrolünde)
+- [Harness'lar ve pasif şablonlar](#harnesslar-ve-pasif-şablonlar)
+- [Durum, devam etme ve kanıt](#durum-devam-etme-ve-kanıt)
+- [Onay sınıfları](#onay-sınıfları)
+- [Sık durumlar ve sorun giderme](#sık-durumlar-ve-sorun-giderme)
+- [Bu depoyu doğrulayın](#bu-depoyu-doğrulayın)
 
 ## Oyun kitabını agent'a verin
+
+Oyun kitabı, test edilmiş bir Agent Skill olarak yayımlanır. Skills CLI ile kurun:
+
+```bash
+npx skills add Srcanesen/mobile-app-ship-playbook --skill mobile-app-ship
+```
 
 Agent'a hedef yolu ve istenen kapsamı söyleyin. Agent şu sırayla okumalıdır:
 
@@ -47,6 +56,17 @@ Agent'a hedef yolu ve istenen kapsamı söyleyin. Agent şu sırayla okumalıdı
 **Read-only denetim**
 
 > `<target-app-dir>` konumundaki uygulamayı bu oyun kitabıyla denetle. Zorunlu onboarding zincirini oku ve yalnızca okuma amaçlı keşif yap. Eksik hazırlıkları, sonucu bilinmeyen işlemleri ve sonraki güvenli adımı bildir. Hedef dosyalara yazma, araç kurma, kimlik doğrulama başlatma veya sağlayıcıda değişiklik yapan araçları çağırma.
+
+## Proje durumu
+
+> **Aktif olarak geliştiriliyor.** Bu proje hâlâ 0.x sürümündedir. Daha fazla gerçek yayınlama akışı uygulandıkça ve incelendikçe rehber ve arayüzler gelişmeye devam edecektir.
+
+- **iOS:** iOS akışı, gerçek bir uygulamanın **App Store Connect üzerinden App Review'e gönderilmesine** kadar kullanıldı. Bu, akışın incelemeye gönderim adımına ulaştığını doğrular; App Store onayı veya herkese açık yayın anlamına gelmez.
+- **Android:** Google Play akışı belgelenmiştir ancak **gerçek bir Play gönderimiyle henüz uçtan uca test edilmemiştir**. Android rehberini üretim ortamında henüz doğrulanmamış kabul edin ve karşılaştığınız eksikleri bildirin.
+
+Bu depo yayınlanacak uygulama değil, coding agent'a verilen yayınlama oyun kitabıdır. **Repoyu kullandığınız agent ortamında klonlayın veya açın**, ardından uygulamanın ayrı klasörünü açıkça `<target-app-dir>` olarak belirtin. Hedef uygulama ayrı kalır; repodaki şablonlar yalnızca pasif örneklerdir. Otomatik olarak bulunmaz, kurulmaz, kopyalanmaz, kimlik doğrulaması yapmaz veya etkinleşmez.
+
+Resmî giriş noktası [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md) dosyasıdır. Ürün sınırı ve ölçütleri [PRODUCT.md](PRODUCT.md) içindedir. Binary'leri, OAuth durumunu, token'ları, kullanıcı ayarlarını, kimlik bilgilerini, hedef durumunu ve ham sağlayıcı yanıtlarını bu deponun ve Git'in dışında tutun.
 
 ## Güvenli uçtan uca akış
 
