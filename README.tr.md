@@ -14,6 +14,13 @@
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="macOS arm64 üzerinde test edildi">
 </p>
 
+## Proje durumu
+
+> **Aktif olarak geliştiriliyor.** Bu proje hâlâ 0.x sürümündedir. Daha fazla gerçek yayınlama akışı uygulandıkça ve incelendikçe rehber ve arayüzler gelişmeye devam edecektir.
+
+- **iOS:** iOS akışı, gerçek bir uygulamanın **App Store Connect üzerinden App Review'e gönderilmesine** kadar kullanıldı. Bu, akışın incelemeye gönderim adımına ulaştığını doğrular; App Store onayı veya herkese açık yayın anlamına gelmez.
+- **Android:** Google Play akışı belgelenmiştir ancak **gerçek bir Play gönderimiyle henüz uçtan uca test edilmemiştir**. Android rehberini üretim ortamında henüz doğrulanmamış kabul edin ve karşılaştığınız eksikleri bildirin.
+
 Bu depo yayınlanacak uygulama değil, coding agent'a verilen yayınlama oyun kitabıdır. **Repoyu kullandığınız agent ortamında klonlayın veya açın**, ardından uygulamanın ayrı klasörünü açıkça `<target-app-dir>` olarak belirtin. Hedef uygulama ayrı kalır; repodaki şablonlar yalnızca pasif örneklerdir. Otomatik olarak bulunmaz, kurulmaz, kopyalanmaz, kimlik doğrulaması yapmaz veya etkinleşmez.
 
 Resmî giriş noktası [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md) dosyasıdır. Ürün sınırı ve ölçütleri [PRODUCT.md](PRODUCT.md) içindedir. Binary'leri, OAuth durumunu, token'ları, kullanıcı ayarlarını, kimlik bilgilerini, hedef durumunu ve ham sağlayıcı yanıtlarını bu deponun ve Git'in dışında tutun.

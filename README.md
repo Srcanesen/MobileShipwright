@@ -14,6 +14,13 @@
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="Tested on macOS arm64">
 </p>
 
+## Project status
+
+> **Active development.** This is a 0.x project. Its guidance and interfaces will continue to evolve as more real shipping workflows are exercised and reviewed.
+
+- **iOS:** The iOS path has been used with a real app through submission to **App Review in App Store Connect**. This confirms that the workflow reached review submission; it does not claim App Store approval or public release.
+- **Android:** The Google Play path is documented, but it has **not yet been tested end to end with a real Play submission**. Treat the Android guidance as not yet production-validated and report any gaps you find.
+
 This repository is the playbook, not the app being shipped. Give it to your coding agent by cloning or opening **this repository in the agent harness**, then name the separate app directory explicitly as `<target-app-dir>`. The target app remains separate; repository templates are inactive examples and are not discovered, installed, copied, authenticated, or activated automatically.
 
 The canonical entry point is [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md). Product boundaries and metrics live in [PRODUCT.md](PRODUCT.md). Keep binaries, OAuth state, tokens, user configuration, credentials, target state, and raw vendor responses out of this repository and Git.
