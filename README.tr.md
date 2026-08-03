@@ -7,7 +7,7 @@
 <h1 align="center">Mobile App Ship Playbook</h1>
 
 <p align="center">
-  Flutter/Firebase uygulamalarını bağımsız iOS App Store ve Android Play yollarından yayınlamak için kanıt öncelikli (evidence-first), klonlanabilir bir araç seti; güvenlikten ödün vermeden durum, onay ve insan kapılarını (human gates) koordine eder.
+  Flutter/Firebase tabanlı mobil uygulamaları App Store ve Google Play'e güvenli, denetlenebilir ve tekrarlanabilir biçimde taşımak için kanıta dayalı bir araç seti. Durumu, onayları ve insan kontrol noktalarını güvenlikten ödün vermeden koordine eder.
 </p>
 
 <p align="center">
@@ -16,20 +16,20 @@
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="macOS arm64 üzerinde test edildi">
 </p>
 
-## Bu ne
+## Bu proje ne sağlar?
 
-Klonlanabilir tek bir paket: mobil uygulamaları ayrı App Store ve Play yollarından yayınlamak için kanonik skill, manifestler, pasif harness bağdaştırıcıları, iş akışları ve doğrulama içerir. Tek giriş noktası [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md) dosyasıdır.
+Tek bir klonlanabilir paket içinde mobil uygulama yayınlama skill'ini, manifestleri, pasif harness adaptörlerini, iş akışlarını ve doğrulama araçlarını sunar. Projenin tek resmi giriş noktası [skills/mobile-app-ship/SKILL.md](skills/mobile-app-ship/SKILL.md) dosyasıdır.
 
-Araçlar Git dışına kurulur; bu depoda hiçbir ikili dosya, belirteç (token), OAuth durumu, kullanıcı yapılandırması veya kimlik bilgisi bulunmaz. Ürün sınırı, ölçülebilir kapsam ve başarı ölçütleri için [PRODUCT.md](PRODUCT.md) dosyasına bakın.
+Gerekli araçlar Git deposunun dışına kurulur. Binary dosyalar, token'lar, OAuth durumu, kullanıcı yapılandırması ve kimlik bilgileri bu repoda tutulmaz. Ürünün kapsamı, ölçülebilir hedefleri ve başarı ölçütleri için [PRODUCT.md](PRODUCT.md) dosyasına bakın.
 
-## Özellikler
+## Öne çıkan özellikler
 
-- **Tek kanonik skill** — herhangi bir hedef uygulama için preflight, onboarding, bootstrap ve kanıt kaydını yürütür.
-- **Güvenli bootstrap** — varsayılan olarak kuru çalıştırmadır (dry-run); yalnızca eksik veya sapmış araçları önerir ve mevcut bağdaştırıcıların üzerine asla yazmaz.
-- **Kanıt öncelikli durum** — `status-write`, hash ile bağlı, kilit korumalı STATUS işlemlerini yalnızca insan onayından sonra kaydeder.
-- **Harness'tan bağımsız** — Pi, Claude Code, Codex, Cursor, Gemini CLI, VS Code ve Windsurf için pasif, kimlik bilgisi içermeyen şablonlar.
-- **Çevrimdışı doğrulama** — yalnızca Python standart kütüphanesi; çalışma zamanı bağımlılığı yoktur.
-- **Git'te sır yok** — kimlik bilgileri, OAuth durumu ve ham satıcı yanıtları depoya asla girmez.
+- **Tek doğruluk kaynağı** — canonical skill; preflight, onboarding, bootstrap ve kanıt kaydı adımlarını her hedef uygulama için aynı kurallarla yürütür.
+- **Güvenli kurulum** — `bootstrap` varsayılan olarak dry-run çalışır; yalnızca eksik veya sürümü sapmış araçları önerir, mevcut adaptörlerin üzerine yazmaz.
+- **Kanıta dayalı durum yönetimi** — `status-write`, hash'e bağlı ve kilitle korunan STATUS işlemlerini ancak gerekli insan onayı verildikten sonra kaydeder.
+- **Agent ortamlarından bağımsız** — Pi, Claude Code, Codex, Cursor, Gemini CLI, VS Code ve Windsurf için pasif, kimlik bilgisi içermeyen şablonlar sağlar.
+- **Çevrimdışı doğrulama** — yalnızca Python standart kütüphanesini kullanır; çalışma zamanı bağımlılığı yoktur.
+- **Git'e sır girmez** — kimlik bilgileri, OAuth durumu ve sağlayıcılardan alınan ham yanıtlar repoya kaydedilmez.
 
 ## Hızlı başlangıç
 
@@ -37,71 +37,71 @@ Araçlar Git dışına kurulur; bu depoda hiçbir ikili dosya, belirteç (token)
 git clone https://github.com/Srcanesen/mobile-app-ship-playbook.git
 cd mobile-app-ship-playbook
 
-# 1. Existing target: inspect its state read-only first.
+# 1. Mevcut bir hedefte önce durumu yalnızca okuyarak inceleyin.
 scripts/mobile-app-ship preflight --target /path/to/app --platform ios --json
 
-# New target, or a target without STATUS.json: fill the resumable form.
+# Yeni bir hedefte veya STATUS.json bulunmayan bir projede devam ettirilebilir formu açın.
 scripts/mobile-app-ship onboard-web --target /path/to/app --no-open
-# Or use the terminal flow when a browser is unavailable.
+# Tarayıcı kullanılamıyorsa terminal akışını kullanın.
 scripts/mobile-app-ship onboard --target /path/to/app --interactive
-# Onboarding stores .mobile-app-ship-decisions.json in the target; keep it target-local and ignored.
+# Onboarding, .mobile-app-ship-decisions.json dosyasını hedefe kaydeder; dosyayı hedefe özel ve Git dışında tutun.
 
 scripts/mobile-app-ship doctor --harness claude-code --target /path/to/app --platform both
 scripts/mobile-app-ship bootstrap --harness claude-code --target /path/to/app --platform both
-# bootstrap is dry-run by default; --apply only after inspecting the plan.
+# bootstrap varsayılan olarak dry-run çalışır; planı incelemeden --apply kullanmayın.
 scripts/mobile-app-ship bootstrap --harness claude-code --target /path/to/app --platform both --apply --approve skill --approve adapter
 
-# 2. Complete provider connections and record only vendor read-back evidence.
+# 2. Sağlayıcı bağlantılarını tamamlayın ve yalnızca doğrulanmış, temizlenmiş read-back kanıtlarını kaydedin.
 scripts/mobile-app-ship next-auth --harness claude-code --target /path/to/app
 scripts/mobile-app-ship next-auth --harness claude-code --target /path/to/app --record --approve-progress --outcome verified --claim "Sanitized read-back claim" --evidence-id evidence-001 --limitation "Sanitized limitation"
-# Use --outcome not_needed --limitation "Out of scope" for providers the initial form excludes.
+# Başlangıç formunda kapsam dışı bırakılan sağlayıcılar için --outcome not_needed --limitation "Out of scope" kullanın.
 
-# 3. Optionally acknowledge the complete plan. This is not write approval.
+# 3. İsterseniz tamamlanan planı kabul edin. Bu işlem yazma yetkisi vermez.
 scripts/mobile-app-ship onboard --target /path/to/app --acknowledge-plan
 ```
 
-Her dış değişiklik yine kendi tek kullanımlık kesin onayına (exact single-use approval) ihtiyaç duyar. Seçtiğiniz hedefteki [kanonik skill](skills/mobile-app-ship/SKILL.md) dosyasını okuyun, [harness onboarding](skills/mobile-app-ship/references/harness-onboarding.md) sürecini izleyin ve sağlayıcıları tek tek bağlayın.
+Her harici değişiklik için ayrıca açık ve tek kullanımlık onay gerekir. Seçtiğiniz hedefteki [canonical skill](skills/mobile-app-ship/SKILL.md) dosyasını okuyun, [harness onboarding](skills/mobile-app-ship/references/harness-onboarding.md) adımlarını izleyin ve sağlayıcıları sırayla, birer birer bağlayın.
 
-## Desteklenen harness'lar
+## Desteklenen agent ortamları
 
-Tüm bağdaştırıcı şablonları pasif depo malzemesidir; asla otomatik yüklenmez veya kopyalanmaz. Pi birincil belgelenmiş yoldur; diğer tüm harness'lar isteğe bağlıdır.
+Tüm adaptör şablonları repoda pasif olarak bulunur; otomatik olarak yüklenmez veya kullanıcı yapılandırmasına kopyalanmaz. Birincil belgelenmiş yol Pi'dir. Diğer harness'lar isteğe bağlı alternatiflerdir.
 
-| Harness | Şablon | Notlar |
+| Ortam | Şablon | Notlar |
 |---|---|---|
-| **Pi** (birincil) | [harnesses/pi/templates/mcp.json](harnesses/pi/templates/mcp.json) | Pi çekirdeğinin yerel MCP istemcisi yoktur; ayrıca onaylanan `pi-mcp-adapter` uzantısını kullanır. RevenueCat kayıtlı olmayan bir Pi OAuth istemcisini reddedebilir — sağlayıcıya bağlıdır; körlemesine tekrar denemeyin ([harness notları](harnesses/pi/README.md)). |
-| Claude Code | [harnesses/claude-code/templates/.mcp.json](harnesses/claude-code/templates/.mcp.json) | Proje yerel `.mcp.json`. |
-| Codex | [harnesses/codex/templates/config.toml](harnesses/codex/templates/config.toml) | Proje yerel `.codex/config.toml`; isteğe bağlıdır, zorunlu değildir. |
-| Cursor | [harnesses/cursor/templates/mcp.json](harnesses/cursor/templates/mcp.json) | Proje yerel `.cursor/mcp.json`. |
-| Gemini CLI | [harnesses/gemini-cli/templates/settings.json](harnesses/gemini-cli/templates/settings.json) | Sahte skill yoktur; yalnızca onaylanmış manuel bağlam geri dönüşü (fallback). |
-| VS Code | [harnesses/vscode/templates/mcp.json](harnesses/vscode/templates/mcp.json) | Çalışma alanı/proje `.vscode/mcp.json`. |
-| Windsurf | [harnesses/windsurf/templates/mcp_config.json](harnesses/windsurf/templates/mcp_config.json) | Yalnızca inceleme; bootstrap için desteklenmez; manuel insan kapısı birleştirmesi kullanıcı geneli yapılandırmaya yapılır. |
+| **Pi** (birincil) | [harnesses/pi/templates/mcp.json](harnesses/pi/templates/mcp.json) | Pi'nin çekirdeğinde yerleşik MCP istemcisi yoktur; ayrıca onaylanmış `pi-mcp-adapter` uzantısı kullanılır. RevenueCat, kayıtlı olmayan bir Pi OAuth istemcisini reddedebilir. Bu durum sağlayıcıya bağlıdır; körlemesine yeniden denemeyin ([Pi notları](harnesses/pi/README.md)). |
+| Claude Code | [harnesses/claude-code/templates/.mcp.json](harnesses/claude-code/templates/.mcp.json) | Projeye özel `.mcp.json` kullanır. |
+| Codex | [harnesses/codex/templates/config.toml](harnesses/codex/templates/config.toml) | Projeye özel `.codex/config.toml` kullanır; isteğe bağlıdır. |
+| Cursor | [harnesses/cursor/templates/mcp.json](harnesses/cursor/templates/mcp.json) | Projeye özel `.cursor/mcp.json` kullanır. |
+| Gemini CLI | [harnesses/gemini-cli/templates/settings.json](harnesses/gemini-cli/templates/settings.json) | Sahte bir skill üretmez; yalnızca onaylı manuel bağlam aktarımı seçeneği sunar. |
+| VS Code | [harnesses/vscode/templates/mcp.json](harnesses/vscode/templates/mcp.json) | Çalışma alanına özel `.vscode/mcp.json` kullanır. |
+| Windsurf | [harnesses/windsurf/templates/mcp_config.json](harnesses/windsurf/templates/mcp_config.json) | Yalnızca inceleme amaçlıdır; bootstrap tarafından desteklenmez. Kullanıcı genelindeki yapılandırmaya yapılacak birleştirme, insan onayı gerektirir. |
 
-**Pi birincil yolu.** Ayrı bir yerel onaydan sonra test edilmiş `pi-mcp-adapter` uzantısını kurun ve `harnesses/pi/templates/mcp.json` içinden yalnızca kimlik bilgisi içermeyen RevenueCat girdisini `~/.pi/agent/mcp.json` dosyasına birleştirin — tembel yaşam döngüsü, OAuth, yalnızca proxy. Asla proje `.mcp.json` dosyası oluşturmayın, bağdaştırıcının init komutunu çalıştırmayın veya kimlik bilgisi yapıştırmayın. Ayrı bir oturumda kimlik doğrulayın ve herhangi bir yazma kapısından önce yalnızca okuma amaçlı RevenueCat keşfi yapın.
+**Pi için önerilen yol:** Ayrı bir yerel onay aldıktan sonra test edilmiş `pi-mcp-adapter` sürümünü kurun. `harnesses/pi/templates/mcp.json` içinden yalnızca kimlik bilgisi içermeyen RevenueCat girdisini `~/.pi/agent/mcp.json` dosyasına ekleyin; yapılandırmayı lazy lifecycle, OAuth ve proxy-only olarak koruyun. Proje içinde `.mcp.json` oluşturmayın, adaptörün init komutunu çalıştırmayın ve kimlik bilgilerini yapıştırmayın. Kimlik doğrulamayı ayrı bir oturumda tamamlayın. Herhangi bir yazma onayından önce RevenueCat tarafında yalnızca read-only keşif yapın.
 
 ## Güvenlik modeli
 
-- Kimlik doğrulama ve plan onayı hiçbir zaman yazma yetkisi vermez; seçilen kapsamlar yalnızca gelecekteki niyettir.
-- Her dış değişiklik şu zinciri izler: **Inspect → Plan → exact single-use approval → Apply once → Read back → Evidence**.
-- Yükleme, test kullanıcısı dağıtımı, gönderim ve yayın, ayrı tüketilen kapılara (consumed gates) sahip ayrı işlemlerdir.
-- Genel yayın (public release) varsayılan olarak hayırdır ve kendi kesin onayını gerektirir.
-- Kapsam/değer sapması, sırlar, manuel 2FA/hesap/ödeme/yasal işlemler, yıkıcı kurtarma veya bilinmeyen zaman aşımlarında durun.
-- Bu depo oyun kitabıdır, yayınlanan hedef uygulama değildir: her hedefi ayrı bir dizinde tutun ve hedef durumunu, kimlik bilgilerini, OAuth durumunu veya ham satıcı yanıtlarını asla buraya kopyalamayın. Başkasının işini gizlemek veya kaldırmak için `git reset`, `git clean` veya zorlamalı checkout asla kullanmayın.
+- Kimlik doğrulama ve planın kabul edilmesi yazma yetkisi vermez. Seçilen kapsamlar yalnızca gelecekte yapılması düşünülen işlemleri belirtir.
+- Her harici değişiklik şu sırayı izler: **Inspect → Plan → exact single-use approval → Apply once → Read back → Evidence**.
+- Build yükleme, test kullanıcısı dağıtımı, mağaza incelemesine gönderim ve genel yayına alma birbirinden ayrı işlemlerdir; her biri ayrı onay gerektirir.
+- Public release varsayılan olarak kapalıdır ve kendine ait açık bir onay olmadan uygulanmaz.
+- Kapsam veya değer değişirse, secret tespit edilirse, manuel 2FA/hesap/ödeme/yasal işlem gerekirse, yıkıcı kurtarma söz konusuysa ya da zaman aşımının sonucu bilinmiyorsa işlem durdurulur.
+- Bu repo yayınlama oyun kitabını barındırır; hedef uygulamanın kendisi değildir. Hedef uygulamaları ayrı dizinlerde tutun. Hedef durumu, kimlik bilgileri, OAuth verileri veya sağlayıcılardan alınan ham yanıtları bu repoya kopyalamayın. Başkasına ait çalışmaları gizlemek veya silmek için `git reset`, `git clean` ya da zorlamalı checkout kullanmayın.
 
 ## Proje yapısı
 
 ```
 ├── scripts/mobile-app-ship          # CLI: preflight, onboard, doctor, bootstrap, next-auth, validate
-├── skills/mobile-app-ship/          # Canonical skill, references, fixtures, browser onboarding page
+├── skills/mobile-app-ship/          # Canonical skill, referanslar, fixture'lar ve tarayıcı onboarding sayfası
 │   └── SKILL.md
-├── harnesses/                       # Inactive per-harness MCP templates (Pi, Codex, Windsurf, ...)
-├── schemas/status.schema.json       # STATUS transaction schema (byte-identical to the skill asset)
-├── tests/fixtures/                  # Valid and invalid STATUS fixtures
-├── .github/workflows/validate.yml   # CI: offline validation plus browser smoke
-├── Brewfile                         # macOS arm64 install inventory
-├── PRODUCT.md                       # Product boundary and success metrics
-├── CONTRIBUTING.md                  # Contribution guidelines
-├── SECURITY.md                      # Vulnerability reporting
-└── LICENSE                          # MIT license
+├── harnesses/                       # Harness bazlı pasif MCP şablonları (Pi, Codex, Windsurf, ...)
+├── schemas/status.schema.json       # Skill asset'iyle byte düzeyinde aynı STATUS işlem şeması
+├── tests/fixtures/                  # Geçerli ve geçersiz STATUS fixture'ları
+├── .github/workflows/validate.yml   # CI: çevrimdışı doğrulama ve tarayıcı smoke testi
+├── Brewfile                         # macOS arm64 kurulum envanteri
+├── PRODUCT.md                       # Ürün sınırı ve başarı ölçütleri
+├── CONTRIBUTING.md                  # Katkı rehberi
+├── SECURITY.md                      # Güvenlik açığı bildirim süreci
+└── LICENSE                          # MIT lisansı
 ```
 
 ## Doğrulama
@@ -115,8 +115,8 @@ python3 skills/mobile-app-ship/scripts/validate_playbook.py
 git diff --check
 ```
 
-Doğrulama çevrimdışı ve yalnızca okumadır. CI, kök betiği (root wrapper) çalıştırır; `CI=true` olduğunda onboarding tarayıcı duman testini (browser smoke) de çalıştırır.
+Doğrulama tamamen çevrimdışı ve read-only çalışır. CI, kök doğrulama betiğini çalıştırır; `CI=true` olduğunda tarayıcı onboarding smoke testi de devreye girer.
 
 ## Katkıda bulunma
 
-Katkılar memnuniyetle karşılanır — önce [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını okuyun. Güvenlik açıklarını [SECURITY.md](SECURITY.md) içindeki süreç üzerinden bildirin. Bu proje [MIT lisansı](LICENSE) ile lisanslıdır. Ürün sınırı ve başarı ölçütleri için [PRODUCT.md](PRODUCT.md) dosyasına bakın.
+Katkılarınızı bekliyoruz. Başlamadan önce [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını okuyun. Güvenlik açıklarını [SECURITY.md](SECURITY.md) içinde açıklanan yöntemle bildirin. Proje [MIT lisansı](LICENSE) ile yayımlanır. Ürün sınırı ve başarı ölçütleri için [PRODUCT.md](PRODUCT.md) dosyasına bakın.
