@@ -2,6 +2,8 @@
   <img src=".github/assets/logo.png" alt="Mobile App Ship Playbook" width="110">
 </p>
 
+<p align="center"><b><a href="README.md">English</a> | <a href="README.tr.md">Türkçe</a></b></p>
+
 <h1 align="center">Mobile App Ship Playbook</h1>
 
 <p align="center">
