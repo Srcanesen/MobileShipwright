@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Mobile App Ship target-local decisions",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "decisions", "approvalMode", "planAcknowledgement"],
+  "properties": {
+    "schemaVersion": {"const": "3.0.0"},
+    "decisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tooling.harness": {"enum": ["claude-code", "codex", "cursor", "vscode", "windsurf", "gemini-cli", "pi"]},
+        "project.platforms": {"enum": ["ios", "android", "both"]},
+        "connection.asc": {"enum": ["ready", "deferred", "not_needed"]}, "connection.firebase": {"enum": ["ready", "deferred", "not_needed"]}, "connection.revenuecat": {"enum": ["ready", "deferred", "not_needed"]}, "connection.flutter": {"enum": ["ready", "deferred", "not_needed"]}, "connection.xcode": {"enum": ["ready", "deferred", "not_needed"]}, "connection.xcodebuildmcp": {"enum": ["ready", "deferred", "not_needed"]}, "connection.gcloud_play": {"enum": ["ready", "deferred", "not_needed"]},
+        "app.name": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^[^\\r\\n]+$"}, "app.bundle_id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]{1,199}$"}, "app.package_name": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]{1,199}$"}, "support.email": {"type": "string", "format": "email", "maxLength": 500},
+        "review.first_name": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^[^\\r\\n]+$"}, "review.last_name": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^[^\\r\\n]+$"}, "review.email": {"type": "string", "format": "email", "maxLength": 500}, "review.phone": {"type": "string", "pattern": "^\\+[1-9][0-9]{6,14}$"}, "review.demo_access_required": {"enum": ["yes", "no", "manual"]},
+        "listing.primary_locale": {"$ref": "#/$defs/locale"}, "listing.locales": {"type": "string", "pattern": "^[a-z]{2}(?:-(?:[A-Z]{2}|[A-Z][a-z]{3}))?(?:,[a-z]{2}(?:-(?:[A-Z]{2}|[A-Z][a-z]{3}))?)*$", "not": {"pattern": "(?:^|,)(?:tr-TR|it-IT|ja-JP|ko-KR|ru-RU|hi-IN|pl-PL|uk-UA|id-ID|vi-VN|th-TH)(?:,|$)"}}, "listing.territories": {"type": "string", "pattern": "^[A-Z]{2}(?:,[A-Z]{2})*$"},
+        "pricing.app": {"oneOf": [{"const": "free"}, {"$ref": "#/$defs/price"}]}, "pricing.iaps": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/iap"}}, "distribution.release_mode": {"enum": ["manual", "automatic", "phased"]}, "screenshots.device_families": {"enum": ["iphone", "ipad", "iphone,ipad", "ipad,iphone"]}, "privacy.readiness": {"enum": ["ready", "pending", "manual"]}, "distribution.build_policy": {"enum": ["latest_processed", "latest_testflight", "specific_build", "manual"]},
+        "authorization.firebase_create_deploy": {"enum": ["yes", "no"]}, "authorization.app_store_records_metadata": {"enum": ["yes", "no"]}, "authorization.iap_catalog": {"enum": ["yes", "no"]}, "authorization.pricing_availability": {"enum": ["yes", "no"]}, "authorization.revenuecat_config": {"enum": ["yes", "no"]}, "authorization.signing_assets": {"enum": ["yes", "no"]}, "authorization.screenshot_upload_replace": {"enum": ["yes", "no"]}, "authorization.build_upload": {"enum": ["yes", "no"]}, "authorization.testflight_distribution": {"enum": ["yes", "no"]}, "authorization.review_submission": {"enum": ["yes", "no"]}, "authorization.public_release": {"enum": ["yes", "no"]}
+      }
+    },
+    "approvalMode": {"const": "strict"},
+    "planAcknowledgement": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["acknowledgedAt", "canonicalSha256"], "properties": {"acknowledgedAt": {"type": "string", "format": "date-time", "pattern": "Z$"}, "canonicalSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}]}
+  },
+  "$defs": {
+    "locale": {"type": "string", "pattern": "^[a-z]{2}(?:-(?:[A-Z]{2}|[A-Z][a-z]{3}))?$", "not": {"enum": ["tr-TR", "it-IT", "ja-JP", "ko-KR", "ru-RU", "hi-IN", "pl-PL", "uk-UA", "id-ID", "vi-VN", "th-TH"]}},
+    "price": {"type": "object", "additionalProperties": false, "required": ["amount", "currency", "baseTerritory"], "properties": {"amount": {"type": "string", "pattern": "^(?!0(?:\\.0{1,2})?$)(?:0|[1-9][0-9]*)(?:\\.[0-9]{1,2})?$"}, "currency": {"type": "string", "pattern": "^[A-Z]{3}$"}, "baseTerritory": {"type": "string", "pattern": "^[A-Z]{2}$"}}},
+    "iap": {"type": "object", "additionalProperties": false, "required": ["productId", "type", "amount", "currency", "baseTerritory"], "properties": {"productId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{1,199}$"}, "type": {"enum": ["consumable", "non_consumable", "auto_renewable_subscription", "non_renewing_subscription"]}, "amount": {"type": "string", "pattern": "^(?!0(?:\\.0{1,2})?$)(?:0|[1-9][0-9]*)(?:\\.[0-9]{1,2})?$"}, "currency": {"type": "string", "pattern": "^[A-Z]{3}$"}, "baseTerritory": {"type": "string", "pattern": "^[A-Z]{2}$"}}}
+  }
+}

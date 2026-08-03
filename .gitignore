@@ -1,0 +1,59 @@
+# OS and agent-local state
+.DS_Store
+.auto/
+**/.auto/
+**/__pycache__/
+*.py[cod]
+node_modules/
+**/node_modules/
+.oauth/
+.oauth-state/
+tokens/
+
+# Environment and credentials
+.env*
+!.env.example
+*.p8
+*.pem
+*.key
+*.mobileprovision
+*.cer
+*.p12
+*.jks
+*.keystore
+key.properties
+*-service-account*.json
+service-account*.json
+credentials*.json
+
+# Flutter and Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Xcode / CocoaPods
+DerivedData/
+ios/Pods/
+*.xcarchive
+*.ipa
+
+# Android / Gradle
+.gradle/
+android/.gradle/
+android/app/build/
+*.aab
+*.apk
+
+# Other generated/local artifacts
+.terraform/
+/STATUS.json
+/PROGRESS.md
+/STATUS.local.json
+/PROGRESS.local.md
+.mobile-app-ship-onboarding.json
+.mobile-app-ship-decisions.json

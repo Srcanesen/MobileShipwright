@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "valid-test-app", "bundleId": "com.example.valid", "packageName": "com.example.valid"},
+  "targets": {
+    "ios": {
+      "state": "LOCALLY_VERIFIED",
+      "blocker": null,
+      "history": [
+        {"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]},
+        {"state": "IMPLEMENTING", "at": "2026-01-02T00:00:00Z", "actionId": "act-build", "evidenceIds": ["ev-build"]},
+        {"state": "LOCALLY_VERIFIED", "at": "2026-01-03T00:00:00Z", "actionId": "act-test", "evidenceIds": ["ev-test"]}
+      ]
+    },
+    "android": {
+      "state": "SCOPED",
+      "blocker": null,
+      "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]}]
+    }
+  },
+  "actions": [
+    {"id": "act-build", "intent": "Build iOS target.", "target": "ios", "tool": "Flutter", "classification": "local_mutation", "status": "verified", "gateId": null, "verificationQuery": "flutter build", "evidenceIds": ["ev-build"]},
+    {"id": "act-test", "intent": "Test iOS target.", "target": "ios", "tool": "Flutter", "classification": "inspect", "status": "verified", "gateId": null, "verificationQuery": "flutter test", "evidenceIds": ["ev-test"]}
+  ],
+  "evidence": [
+    {"id": "ev-scope", "claim": "Scope exists.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "SPEC recorded.", "limitations": "Scope only."},
+    {"id": "ev-build", "claim": "Build succeeded.", "source": "tool", "timestamp": "2026-01-02T00:00:00Z", "toolVersion": "Flutter stable", "sanitizedResult": "Build passed.", "limitations": "Not a distributed build."},
+    {"id": "ev-test", "claim": "Tests pass.", "source": "tool", "timestamp": "2026-01-03T00:00:00Z", "toolVersion": "Flutter stable", "sanitizedResult": "All tests passed.", "limitations": "Not device-tested."}
+  ],
+  "gates": []
+}

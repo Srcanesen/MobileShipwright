@@ -1,0 +1,20 @@
+{
+  "$schema": "tool-manifest.schema.json",
+  "schemaVersion": "1.1.0",
+  "verifiedOn": "2026-07-30",
+  "platform": "macOS arm64",
+  "tools": [
+    {"id":"node","command":"node","testedVersion":"24.18.0","ownerDomain":"Node.js","platforms":["shared"],"requirement":"required","sourceUrl":"https://formulae.brew.sh/formula/node@24","install":{"macos":"brew install node@24"}},
+    {"id":"flutter","command":"flutter","testedVersion":"3.44.8","ownerDomain":"Flutter","platforms":["shared"],"requirement":"required","sourceUrl":"https://formulae.brew.sh/cask/flutter","install":{"macos":"brew install --cask flutter"}},
+    {"id":"firebase","command":"firebase","testedVersion":"15.24.0","ownerDomain":"Firebase/Google","platforms":["shared"],"requirement":"optional","sourceUrl":"https://www.npmjs.com/package/firebase-tools","install":{"macos":"npm install --global firebase-tools@15.24.0"}},
+    {"id":"gcloud","command":"gcloud","testedVersion":"577.0.0","ownerDomain":"Firebase/Google","platforms":["shared"],"requirement":"optional","sourceUrl":"https://formulae.brew.sh/cask/gcloud-cli","install":{"macos":"brew install --cask gcloud-cli"}},
+    {"id":"fastlane","command":"fastlane","testedVersion":"2.237.0","ownerDomain":"Fastlane/Play","platforms":["android"],"requirement":"optional","sourceUrl":"https://formulae.brew.sh/formula/fastlane","install":{"macos":"brew install fastlane"}},
+    {"id":"asc","command":"asc","testedVersion":"3.1.3","ownerDomain":"asc CLI","platforms":["ios"],"requirement":"optional","macosOnly":true,"sourceUrl":"https://formulae.brew.sh/formula/asc","install":{"macos":"brew install asc"}},
+    {"id":"xcodebuildmcp","command":"xcodebuildmcp","testedVersion":"2.7.0","ownerDomain":"XcodeBuildMCP","platforms":["ios"],"requirement":"optional","macosOnly":true,"sourceUrl":"https://www.npmjs.com/package/xcodebuildmcp","install":{"macos":"npm install --global xcodebuildmcp@2.7.0"}},
+    {"id":"adb","command":"adb","testedVersion":"37.0.1","ownerDomain":"Android/Google","platforms":["android"],"requirement":"required","sourceUrl":"https://formulae.brew.sh/cask/android-platform-tools","install":{"macos":"brew install --cask android-platform-tools"}},
+    {"id":"sdkmanager","command":"sdkmanager","testedVersion":"20.0","ownerDomain":"Android/Google","platforms":["android"],"requirement":"required","sourceUrl":"https://formulae.brew.sh/cask/android-commandlinetools","install":{"macos":"brew install --cask android-commandlinetools"}},
+    {"id":"java","command":"java","testedVersion":"17.0.20","ownerDomain":"OpenJDK","platforms":["android"],"requirement":"required","sourceUrl":"https://formulae.brew.sh/formula/openjdk@17","install":{"macos":"brew install openjdk@17"}},
+    {"id":"xcodebuild","command":"xcodebuild","testedVersion":"26.6","ownerDomain":"Apple/Xcode","platforms":["ios"],"requirement":"required","macosOnly":true,"sourceUrl":"https://developer.apple.com/xcode/","install":{"macos":"Install Xcode 26.6 from Apple, then complete its first-launch steps manually."}},
+    {"id":"pod","command":"pod","testedVersion":"1.17.0","ownerDomain":"CocoaPods","platforms":["ios"],"requirement":"required","macosOnly":true,"sourceUrl":"https://formulae.brew.sh/formula/cocoapods","install":{"macos":"brew install cocoapods"}}
+  ]
+}

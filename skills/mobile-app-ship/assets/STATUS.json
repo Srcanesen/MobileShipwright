@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "replace-me", "bundleId": null, "packageName": null},
+  "targets": {
+    "ios": {
+      "state": "SCOPED",
+      "blocker": null,
+      "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope-ios"]}]
+    },
+    "android": {
+      "state": "SCOPED",
+      "blocker": null,
+      "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope-android"]}]
+    }
+  },
+  "actions": [],
+  "evidence": [
+    {"id": "ev-scope-ios", "claim": "Initial iOS target scope recorded.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "SPEC identifies the iOS target.", "limitations": "No implementation evidence yet."},
+    {"id": "ev-scope-android", "claim": "Initial Android target scope recorded.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "SPEC identifies the Android target.", "limitations": "No implementation evidence yet."}
+  ],
+  "gates": []
+}

@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "revenuecat": {
+      "type": "http",
+      "url": "https://mcp.revenuecat.ai/mcp"
+    },
+    "xcodebuildmcp": {
+      "type": "stdio",
+      "command": "xcodebuildmcp",
+      "args": ["mcp"]
+    }
+  }
+}

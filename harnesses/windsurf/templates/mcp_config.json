@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "revenuecat": {
+      "serverUrl": "https://mcp.revenuecat.ai/mcp"
+    },
+    "xcodebuildmcp": {
+      "command": "xcodebuildmcp",
+      "args": ["mcp"]
+    }
+  }
+}

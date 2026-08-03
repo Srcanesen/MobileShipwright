@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.invalid/mobile-app-ship/status.schema.json",
+  "title": "Mobile App Ship Status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolkitVersion", "app", "targets", "actions", "evidence", "gates"],
+  "properties": {
+    "schemaVersion": {"enum": ["1.0.0", "1.1.0"]},
+    "toolkitVersion": {"type": "string", "minLength": 1},
+    "app": {"type": "object", "additionalProperties": false, "required": ["name", "bundleId", "packageName"], "properties": {"name": {"type": "string", "minLength": 1}, "bundleId": {"type": ["string", "null"]}, "packageName": {"type": ["string", "null"]}}},
+    "targets": {"type": "object", "additionalProperties": false, "required": ["ios", "android"], "properties": {"ios": {"$ref": "#/$defs/targetLifecycle"}, "android": {"$ref": "#/$defs/targetLifecycle"}}},
+    "actions": {"type": "array"},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "gates": {"type": "array"}
+  },
+  "allOf": [{
+    "if": {"properties": {"schemaVersion": {"const": "1.0.0"}}},
+    "then": {"properties": {"actions": {"items": {"$ref": "#/$defs/actionV10"}}, "gates": {"items": {"$ref": "#/$defs/gateV10"}}}},
+    "else": {"properties": {"actions": {"items": {"$ref": "#/$defs/actionV11"}}, "gates": {"items": {"$ref": "#/$defs/gateV11"}}}}
+  }],
+  "$defs": {
+    "oneLine": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^[^\\r\\n]+$"},
+    "scope": {"type": "object", "additionalProperties": false, "required": ["resource", "operation", "sideEffects", "verificationQuery"], "properties": {"resource": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\r\\n\\s]+$"}, "operation": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"}, "sideEffects": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/oneLine"}}, "verificationQuery": {"$ref": "#/$defs/oneLine"}}},
+    "lifecycleState": {"enum": ["SCOPED", "IMPLEMENTING", "LOCALLY_VERIFIED", "DISTRIBUTION_READY", "ARTIFACT_BUILT", "UPLOADED", "STORE_PROCESSED", "DISTRIBUTED", "DEVICE_VERIFIED", "SUBMISSION_READY", "SUBMITTED", "IN_REVIEW", "APPROVED", "RELEASE_AUTHORIZED", "RELEASED", "ACTION_REQUIRED", "WITHDRAWN", "SUPERSEDED", "ABANDONED"]},
+    "blocker": {"type": ["object", "null"], "additionalProperties": false, "required": ["id", "summary", "since", "gateId"], "properties": {"id": {"type": "string", "minLength": 1}, "summary": {"type": "string", "minLength": 1}, "since": {"type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\dZ$"}, "gateId": {"type": ["string", "null"]}}},
+    "historyEvent": {"type": "object", "additionalProperties": false, "required": ["state", "at", "actionId", "evidenceIds"], "properties": {"state": {"$ref": "#/$defs/lifecycleState"}, "at": {"type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\dZ$"}, "actionId": {"type": ["string", "null"]}, "evidenceIds": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}},
+    "targetLifecycle": {"type": "object", "additionalProperties": false, "required": ["state", "blocker", "history"], "if": {"properties": {"state": {"const": "RELEASED"}}, "required": ["state"]}, "then": {"properties": {"history": {"type": "array", "contains": {"type": "object", "required": ["state"], "properties": {"state": {"const": "RELEASE_AUTHORIZED"}}}}}}, "properties": {"state": {"$ref": "#/$defs/lifecycleState"}, "blocker": {"$ref": "#/$defs/blocker"}, "history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/historyEvent"}}}},
+    "actionBase": {"type": "object", "additionalProperties": false, "required": ["id", "intent", "target", "tool", "classification", "status", "gateId", "verificationQuery", "evidenceIds"], "properties": {"id": {"type": "string", "minLength": 1}, "intent": {"type": "string", "minLength": 1}, "target": {"enum": ["ios", "android", "shared"]}, "tool": {"type": "string", "minLength": 1}, "classification": {"enum": ["inspect", "local_mutation", "external_mutation"]}, "status": {"enum": ["planned", "approved", "started", "outcome_unknown", "verified", "failed", "canceled"]}, "gateId": {"type": ["string", "null"]}, "verificationQuery": {"type": "string"}, "evidenceIds": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "scope": {"$ref": "#/$defs/scope"}}},
+    "actionV10": {"allOf": [{"$ref": "#/$defs/actionBase"}, {"not": {"required": ["scope"]}}]},
+    "actionV11": {"$ref": "#/$defs/actionBase"},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["id", "claim", "source", "timestamp", "toolVersion", "sanitizedResult", "limitations"], "properties": {"id": {"type": "string", "minLength": 1}, "claim": {"type": "string", "minLength": 1}, "source": {"enum": ["tool", "file", "store_readback", "human_observation"]}, "timestamp": {"type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\dZ$"}, "toolVersion": {"type": ["string", "null"]}, "sanitizedResult": {"type": "string", "minLength": 1}, "limitations": {"type": "string"}}},
+    "gateBase": {"type": "object", "additionalProperties": false, "required": ["id", "class", "action", "target", "state", "approvedAt"], "properties": {"id": {"type": "string", "minLength": 1}, "class": {"enum": ["approval_required", "manual_execution", "approval_and_manual"]}, "action": {"type": "string", "minLength": 1}, "target": {"enum": ["ios", "android", "shared"]}, "state": {"enum": ["pending", "approved", "consumed", "revoked"]}, "approvedAt": {"type": ["string", "null"], "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\dZ$"}, "scope": {"$ref": "#/$defs/scope"}}},
+    "gateV10": {"allOf": [{"$ref": "#/$defs/gateBase"}, {"not": {"required": ["scope"]}}]},
+    "gateV11": {"$ref": "#/$defs/gateBase"}
+  }
+}
