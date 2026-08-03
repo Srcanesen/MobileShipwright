@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Mobile App Ship | Local onboarding</title>
+<link rel="icon" href="data:,">
+<style>
+:root{--bg:#f7f8f6;--panel:#ffffff;--ink:#1b231f;--muted:#5a655f;--line:#d7ddd8;--accent:#0c6b43;--accent-ink:#ffffff;--soft:#e9f1ec;--danger:#b03a3a;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#121815;--panel:#1a221e;--ink:#eef4f0;--muted:#b3c0b8;--line:#3c4941;--accent:#5dd59c;--accent-ink:#102319;--soft:#203128;--danger:#ff8d8d}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);line-height:1.55;overflow-x:hidden;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+code,.field textarea,.cli-next{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:10px 34px;background:var(--panel);border-bottom:1px solid var(--line)}
+.trust{display:flex;gap:8px;flex-wrap:wrap}
+.trust-chip{font-size:.74rem;font-weight:650;letter-spacing:.02em;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.28rem .7rem;background:var(--bg)}
+.language{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.language button{border:0;background:transparent;color:var(--ink);padding:.45rem .75rem;font-size:.8rem;font-weight:700}
+.language button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
+.shell{max-width:1240px;margin:auto;padding:34px 34px 72px}
+.hero{padding:4px 0 24px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.kicker{color:var(--accent);font-weight:750;font-size:.76rem;letter-spacing:.09em;text-transform:uppercase}
+.hero h1{font-size:clamp(1.9rem,3.4vw,3rem);letter-spacing:-.04em;line-height:1.08;margin:.35rem 0 .6rem}
+.hero p{max-width:66ch;margin:0;color:var(--muted)}
+.notice{margin:0 0 26px;padding:15px 16px 13px;background:var(--soft);border:1px solid var(--line);box-shadow:inset 0 2px 0 var(--accent);border-radius:9px;font-size:.9rem}
+.layout{display:grid;grid-template-columns:218px minmax(0,1fr) 316px;gap:30px;align-items:start}
+.rail{position:sticky;top:78px;display:flex;flex-direction:column;gap:4px}
+.rail-title{font-size:.72rem;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:0 4px 6px}
+.rail-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid transparent;border-radius:9px;background:transparent;color:var(--ink);padding:9px 10px;transition:transform .15s ease,background-color .15s ease,border-color .15s ease}
+.rail-item:hover{transform:translateX(2px);background:var(--soft)}
+.rail-num{flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:.72rem;font-weight:750;color:var(--muted);border:1px solid var(--line);background:var(--panel)}
+.rail-body{min-width:0;display:flex;flex-direction:column;gap:1px}
+.rail-title-label{font-size:.86rem;font-weight:650;line-height:1.2}
+.rail-count{font-size:.74rem;color:var(--muted)}
+.rail-item.is-done .rail-num,.rail-item.is-current .rail-num{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rail-item.is-current{background:var(--soft);border-color:var(--accent)}
+.rail-item.is-next .rail-title-label{color:var(--accent)}
+.sections{min-width:0}
+.section{min-width:0;margin:0;padding:26px 0;border:0;border-bottom:1px solid var(--line);scroll-margin-top:86px}
+.section legend.group-title{font-size:1.12rem;font-weight:750;padding:0;margin:0}
+.section-purpose{color:var(--muted);margin:.35rem 0 6px;max-width:72ch;font-size:.92rem}
+.section-count{font-size:.76rem;font-weight:700;color:var(--accent);margin:0 0 16px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.field{min-width:0}
+.field.wide{grid-column:1/-1}
+.field-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px}
+.field-head label{font-weight:700;display:block}
+.field .key{font-size:.72rem;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.12rem .4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.field .help{font-size:.86rem;color:var(--muted);margin:0 0 8px}
+.guidance{margin:0 0 10px;padding:12px;background:var(--soft);border:1px solid var(--line);box-shadow:inset 0 2px 0 var(--accent);border-radius:8px;font-size:.82rem}
+.guidance-title{font-weight:750;display:block;margin-bottom:3px}
+.guidance-format{margin:0 0 4px;color:var(--muted)}
+.guidance-why{margin:4px 0 0;color:var(--muted)}
+code.guidance-example{display:block;margin:4px 0;padding:5px 8px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:.78rem;overflow-wrap:anywhere}
+.field input,.field select,.field textarea{width:100%;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:.64rem .72rem}
+.field textarea{min-height:74px;resize:vertical;font-family:var(--mono);font-size:.84rem}
+.field input,.field select{font-size:.92rem}
+.field .permit{font-size:.8rem;color:var(--accent);margin:7px 0 0}
+.value-options{font-size:.8rem;color:var(--muted);margin-top:8px}
+.value-options summary{cursor:pointer;color:var(--ink);font-weight:650}
+.value-options dl{margin:.5rem 0 0}
+.value-options dt{font-weight:650;color:var(--ink);font-family:var(--mono);font-size:.76rem}
+.value-options dd{margin:0 0 .5rem}
+.risk{padding:10px;border-radius:9px;box-shadow:inset 0 0 0 1px var(--danger)}
+.risk select{border-color:var(--danger)}
+.side{position:sticky;top:78px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:18px;box-shadow:0 1px 3px rgba(20,40,30,.06)}
+.side-title{font-size:.78rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.side-title:not(:first-child){margin-top:20px}
+.completion{font-size:1rem;font-weight:750;margin:0}
+.missing-count,.empty-state{font-size:.84rem;color:var(--muted);margin:.25rem 0 0}
+.ack-state{font-weight:750;margin:0}
+.ack-detail{font-size:.84rem;color:var(--muted);margin:.3rem 0 0}
+.review{border-top:1px solid var(--line);margin-top:18px;padding-top:4px}
+.review h2{font-size:.95rem;margin:1rem 0 .35rem}
+.review p,.review li{color:var(--muted)}
+.review p{margin:.4rem 0}
+.review ul{padding-left:16px;font-size:.82rem;margin:.3rem 0}
+.cli-next{display:block;margin-top:8px;padding:9px;border-radius:8px;background:var(--soft);color:var(--ink);font:700 .74rem var(--mono);overflow-wrap:anywhere}
+.actions{display:flex;flex-direction:column;gap:10px;align-items:flex-start;margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.primary{border:0;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-weight:750;padding:.78rem 1.1rem}
+.primary:active{transform:translateY(1px)}
+.status{min-height:1.5em;color:var(--accent);font-weight:700;font-size:.88rem}
+.status.error{color:var(--danger)}
+.save-note{font-size:.76rem;color:var(--muted);margin:0}
+.mobile-bar{display:none}
+.loading{padding:56px 0;color:var(--muted)}
+.fatal{color:var(--danger);padding:30px 0}
+@media(max-width:960px){
+  .shell{padding:24px 18px 90px}
+  .topbar{padding:10px 18px}
+  .layout{grid-template-columns:minmax(0,1fr);gap:22px}
+  .rail{position:static;flex-direction:row;overflow-x:auto;gap:8px;padding:4px 18px 8px;margin:0 -18px}
+  .rail-title{display:none}
+  .rail-item{flex:none;border:1px solid var(--line);background:var(--panel)}
+  .side{position:static}
+}
+@media(max-width:767px){
+  .hero h1{font-size:2.05rem}
+  .fields{grid-template-columns:1fr}
+  .field.wide{grid-column:auto}
+  .actions{display:none}
+  .mobile-bar{display:flex;align-items:center;gap:12px;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 18px;background:var(--panel);border-top:1px solid var(--line)}
+  .mobile-bar .primary{flex:1;text-align:center}
+  .mobile-bar .status{font-size:.8rem}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="trust" role="list">
+<span class="trust-chip" role="listitem" data-trust="0">Yalnızca yerel</span>
+<span class="trust-chip" role="listitem" data-trust="1">Satıcıya bağlanmaz</span>
+<span class="trust-chip" role="listitem" data-trust="2">Şifre istemez</span>
+<span class="trust-chip" role="listitem" data-trust="3">Yayın yapmaz</span>
+</div>
+<div class="language" id="language-switch" aria-label="Language"><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="tr" aria-pressed="false">TR</button></div>
+</header>
+<main class="shell">
+<header class="hero">
+<div class="kicker" id="kicker">Yalnızca yerel</div>
+<h1 id="title">Satıcı erişimi olmadan yayın hazırlığı.</h1>
+<p id="intro">Mevcut CLI için sır içermeyen planı kaydedin. Bu sayfa kimlik doğrulamaz, satıcıya bağlanmaz veya yayın yapmaz.</p>
+</header>
+<div class="notice" id="notice" role="note"></div>
+<div id="app" class="loading" aria-live="polite">Yerel şema ve kayıtlı kararlar yükleniyor.</div>
+</main>
+<script>
+(()=>{
+'use strict';
+// The server supplies the exact --acknowledge-plan command only when readiness permits.
+const copy={
+ en:{
+  kicker:'Local only',title:'Shipping setup, without vendor access.',
+  intro:'Save a secret-free plan for the existing CLI. This page never authenticates, contacts a vendor, or executes a release.',
+  trust0:'Local only',trust1:'Never contacts a vendor',trust2:'No passwords or secrets',trust3:'Never publishes or releases',
+  notice:'Strict approval contract: plan acknowledgement is not vendor approval. Selected scopes are future intent only. Every external mutation needs its own exact single-use approval.',
+  railAria:'Plan sections',completionTitle:'Completion',entered:'entered',missing:'missing',
+  empty:'No decisions are saved yet. Public release starts at no.',
+  reviewTitle:'Review before saving',reviewText:'Review missing fields, future-intent scopes, readiness blockers, and acknowledgement status. Saving never acknowledges or authorizes.',
+  missingTitle:'Missing fields',scopes:'Future-intent scopes',none:'None',connections:'Connection blockers',evidence:'Read-back evidence blockers',
+  ack:'Plan acknowledgement',ackCurrent:'Current',ackStale:'Stale after decision changes',ackMissing:'Not acknowledged',
+  ackReady:'All decisions and required readiness evidence permit the non-authorizing CLI acknowledgement.',
+  ackCurrentDetail:'The acknowledgement matches the saved decisions. It authorizes no external action.',
+  ackBlocked:'Complete and save all decisions, then resolve connection and read-back evidence blockers.',next:'Next CLI step',
+  guidanceTitle:'What should I enter?',guidanceFormat:'Format',guidanceExample:'Example',guidanceWhy:'Why',
+  consequence:'Current choice consequence: ',required:'Enter a value. The canonical server validator checks it before saving.',
+  valueOptions:'Allowed product types and consequences',
+  save:'Save local plan',saveNote:'Saving writes only the target-local decisions file. No vendor operation or network request is made.',
+  saved:'Saved locally. The acknowledgement was invalidated if decisions changed. No approval or vendor action occurred.',
+  saving:'Saving local plan.',saveFailed:'Save failed: ',
+  loading:'Loading local schema and saved decisions.',error:'Could not load local onboarding data.',
+  langLabel:'Language',langEN:'English',langTR:'Türkçe',
+ },
+ tr:{
+  kicker:'Yalnızca yerel',title:'Satıcı erişimi olmadan yayın hazırlığı.',
+  intro:'Mevcut CLI için sır içermeyen planı kaydedin. Bu sayfa kimlik doğrulamaz, satıcıya bağlanmaz veya yayın yapmaz.',
+  trust0:'Yalnızca yerel',trust1:'Satıcıya bağlanmaz',trust2:'Şifre istemez',trust3:'Yayın yapmaz',
+  notice:'Sıkı onay sözleşmesi: plan kabulü satıcı onayı değildir. Seçilen kapsamlar yalnızca gelecek niyetidir. Her harici değişiklik kendi kesin tek kullanımlık onayını gerektirir.',
+  railAria:'Plan bölümleri',completionTitle:'Tamamlanma',entered:'karar girildi',missing:'eksik',
+  empty:'Henüz kayıtlı karar yok. Genel yayın hayır olarak başlar.',
+  reviewTitle:'Kaydetmeden önce incele',reviewText:'Eksik alanları, gelecek niyeti kapsamlarını, hazırlık engellerini ve plan kabulünün durumunu inceleyin. Kaydetmek hiçbir şeyi kabul etmez veya yetkilendirmez.',
+  missingTitle:'Eksik alanlar',scopes:'Gelecek niyeti kapsamları',none:'Yok',connections:'Bağlantı engelleri',evidence:'Geri okuma kanıtı engelleri',
+  ack:'Plan kabulü',ackCurrent:'Güncel',ackStale:'Karar değişikliklerinden sonra geçersiz',ackMissing:'Kabul edilmedi',
+  ackReady:'Tüm kararlar ve gerekli hazırlık kanıtları, yetki vermeyen CLI plan kabulüne izin veriyor.',
+  ackCurrentDetail:'Plan kabulü kayıtlı kararlarla eşleşiyor. Hiçbir harici işleme yetki vermiyor.',
+  ackBlocked:'Tüm kararları tamamlayıp kaydedin, ardından bağlantı ve geri okuma kanıtı engellerini çözün.',next:'Sonraki CLI adımı',
+  guidanceTitle:'Ne yazmalıyım?',guidanceFormat:'Biçim',guidanceExample:'Örnek',guidanceWhy:'Neden',
+  consequence:'Geçerli seçimin sonucu: ',required:'Bir değer girin. Kanonik sunucu doğrulayıcısı kaydetmeden önce denetler.',
+  valueOptions:'İzin verilen ürün türleri ve sonuçları',
+  save:'Yerel planı kaydet',saveNote:'Kaydetmek yalnızca hedefteki yerel kararlar dosyasını yazar. Satıcı işlemi veya ağ isteği yapılmaz.',
+  saved:'Yerel olarak kaydedildi. Kararlar değiştiyse plan kabulü geçersiz kılındı. Onay veya satıcı işlemi yapılmadı.',
+  saving:'Yerel plan kaydediliyor.',saveFailed:'Kaydetme başarısız: ',
+  loading:'Yerel şema ve kayıtlı kararlar yükleniyor.',error:'Yerel onboarding verisi yüklenemedi.',
+  langLabel:'Dil',langEN:'İngilizce',langTR:'Türkçe',
+ }
+};
+const STORAGE_KEY='mobile-app-ship-lang';
+function savedLanguage(){try{const value=localStorage.getItem(STORAGE_KEY);return value==='tr'||value==='en'?value:null}catch{return null}}
+function browserLanguage(){const candidates=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language];return candidates.some(candidate=>String(candidate).toLowerCase().startsWith('tr'))?'tr':'en'}
+function initialLanguage(){return savedLanguage()||browserLanguage()}
+function rememberLanguage(value){try{localStorage.setItem(STORAGE_KEY,value)}catch{}}
+let lang=initialLanguage(),state,dirty=false;
+const $=selector=>document.querySelector(selector);
+const $$=selector=>Array.from(document.querySelectorAll(selector));
+const text=key=>copy[lang][key];
+const localized=value=>value[lang];
+function element(tag,className,content){const node=document.createElement(tag);if(className)node.className=className;if(content!==undefined)node.textContent=content;return node}
+function setTrust(){document.querySelectorAll('[data-trust]').forEach((chip,index)=>chip.textContent=text('trust'+index))}
+function setLanguage(){document.documentElement.lang=lang;$('#kicker').textContent=text('kicker');$('#title').textContent=text('title');$('#intro').textContent=text('intro');$('#notice').textContent=text('notice');setTrust();$('#language-switch').setAttribute('aria-label',text('langLabel'));document.querySelectorAll('[data-lang]').forEach(button=>{button.setAttribute('aria-pressed',String(button.dataset.lang===lang));button.setAttribute('aria-label',text('lang'+button.dataset.lang.toUpperCase()))});render()}
+function inputFor(field){
+ const value=state.decisions[field.key]||'';
+ let control;
+ if(field.kind==='select'){
+  control=document.createElement('select');
+  control.append(new Option('',''));
+  field.choices.forEach(option=>{
+   const label=localized(option.label)+' ['+option.value+']';
+   const item=new Option(label,option.value,option.value===value,option.value===value);
+   control.append(item);
+  });
+ }else{
+  control=document.createElement(field.key==='pricing.iaps'?'textarea':'input');
+  control.value=value;
+  if(control instanceof HTMLInputElement)control.type='text';
+  if(field.key==='pricing.app')control.placeholder='free | 4.99|USD|US';
+  if(field.key==='pricing.iaps')control.placeholder='[]';
+ }
+ control.name=field.key;
+ control.id='f-'+field.key;
+ control.required=true;
+ return control;
+}
+function updateChoiceDetail(field,control,detail){
+ const choice=(field.choices||[]).find(option=>option.value===control.value);
+ detail.textContent=text('consequence')+(choice?localized(choice.detail):text('required'));
+}
+function guidanceBlock(field){
+ const wrap=element('div','guidance');
+ const guide=field.guidance?localized(field.guidance):null;
+ if(!guide)return wrap;
+ wrap.append(element('span','guidance-title',text('guidanceTitle')));
+ wrap.append(element('p','guidance-format',text('guidanceFormat')+': '+guide.format));
+ wrap.append(element('code','guidance-example',guide.example));
+ wrap.append(element('p','guidance-why',text('guidanceWhy')+': '+guide.why));
+ return wrap;
+}
+function renderField(field){
+ const wide=['pricing.iaps','listing.locales','listing.territories'].includes(field.key);
+ const risk=field.key==='authorization.public_release';
+ const wrap=element('div','field'+(wide?' wide':'')+(risk?' risk':''));
+ const head=element('div','field-head');
+ const label=element('label','',localized(field.label));
+ label.htmlFor='f-'+field.key;
+ head.append(label,element('code','key',field.key));
+ wrap.append(head);
+ wrap.append(element('p','help',localized(field.description)));
+ wrap.append(guidanceBlock(field));
+ const control=inputFor(field);
+ wrap.append(control);
+ const detail=element('p','permit');
+ updateChoiceDetail(field,control,detail);
+ wrap.append(detail);
+ if(field.valueOptions.length){
+  const options=document.createElement('details');
+  options.className='value-options';
+  options.append(element('summary','',text('valueOptions')));
+  const list=document.createElement('dl');
+  field.valueOptions.forEach(option=>list.append(element('dt','',localized(option.label)+' ['+option.value+']'),element('dd','',localized(option.detail))));
+  options.append(list);
+  wrap.append(options);
+ }
+ const update=()=>{state.decisions[field.key]=control.value;dirty=true;updateChoiceDetail(field,control,detail);renderSummary()};
+ control.addEventListener('change',update);
+ control.addEventListener('input',update);
+ return wrap;
+}
+function appendList(parent,title,items){
+ parent.append(element('h3','',title));
+ const list=document.createElement('ul');
+ (items.length?items:[text('none')]).forEach(item=>list.append(element('li','',item)));
+ parent.append(list);
+}
+function render(){
+ if(!state)return;
+ const app=$('#app');
+ app.className='';
+ app.replaceChildren();
+ const form=document.createElement('form');
+ form.className='layout';
+ const grouped={};
+ state.fields.forEach(field=>(grouped[field.group]??=[]).push(field));
+ const groups=Object.keys(grouped);
+ const sectionCount={};
+ groups.forEach(group=>{sectionCount[group]=grouped[group].filter(field=>state.decisions[field.key]).length});
+ const missingGroups=groups.filter(group=>grouped[group].some(field=>!state.decisions[field.key]));
+ const currentGroup=missingGroups[0]||null;
+ const nextGroup=missingGroups[1]||null;
+ const rail=document.createElement('nav');
+ rail.className='rail';
+ rail.setAttribute('aria-label',text('railAria'));
+ rail.append(element('span','rail-title',text('completionTitle')));
+ groups.forEach((group,index)=>{
+  const fields=grouped[group];
+  const done=sectionCount[group]===fields.length;
+  const item=element('button','rail-item');
+  item.type='button';
+  item.className='rail-item'+(done?' is-done':'')+(group===currentGroup?' is-current':'')+(group===nextGroup?' is-next':'');
+  item.append(element('span','rail-num',String(index+1)));
+  const body=element('span','rail-body');
+  body.append(element('span','rail-title-label',localized(state.groups[group])));
+  body.append(element('span','rail-count',sectionCount[group]+' / '+fields.length+' '+text('entered')));
+  item.append(body);
+  item.addEventListener('click',()=>document.getElementById('section-'+group).scrollIntoView());
+  rail.append(item);
+ });
+ form.append(rail);
+ const sections=element('div','sections');
+ groups.forEach(group=>{
+  const fields=grouped[group];
+  const section=document.createElement('fieldset');
+  section.className='section';
+  section.id='section-'+group;
+  section.append(element('legend','group-title',localized(state.groups[group])));
+  section.append(element('p','section-purpose',localized(state.groups[group].description)));
+  section.append(element('p','section-count',sectionCount[group]+' / '+fields.length+' '+text('entered')));
+  const grid=element('div','fields');
+  fields.forEach(field=>grid.append(renderField(field)));
+  section.append(grid);
+  sections.append(section);
+ });
+ form.append(sections);
+ const side=element('aside','side');
+ const summary=element('div','summary');
+ summary.append(element('h2','side-title',text('completionTitle')),element('p','completion'),element('p','missing-count'),element('p','empty-state'));
+ summary.append(element('h2','side-title',text('ack')),element('p','ack-state'),element('p','ack-detail'),element('div','next-step'));
+ const review=element('section','review contract');
+ review.append(element('h2','side-title',text('reviewTitle')),element('p','',text('reviewText')),element('div',''));
+ review.lastChild.id='review-content';
+ const actions=element('div','actions');
+ const saveButton=element('button','primary',text('save'));
+ saveButton.type='submit';
+ const status=element('span','status');
+ status.setAttribute('aria-live','polite');
+ actions.append(saveButton,status,element('p','save-note',text('saveNote')));
+ side.append(summary,review,actions);
+ form.append(side);
+ const bar=element('div','mobile-bar');
+ const barSave=element('button','primary',text('save'));
+ barSave.type='submit';
+ const barStatus=element('span','status');
+ barStatus.setAttribute('aria-live','polite');
+ bar.append(barSave,barStatus);
+ form.append(bar);
+ form.addEventListener('submit',save);
+ app.append(form);
+ renderSummary();
+}
+function renderSummary(){
+ const filled=state.fields.filter(field=>state.decisions[field.key]).length;
+ const missing=state.total-filled;
+ const summary=$('.summary');
+ if(!summary)return;
+ summary.querySelector('.completion').textContent=filled+' / '+state.total+' '+text('entered');
+ summary.querySelector('.missing-count').textContent=missing+' '+text('missing');
+ summary.querySelector('.empty-state').textContent=state.completed===0&&!dirty?text('empty'):'';
+ const scopes=state.fields.filter(field=>field.key.startsWith('authorization.')&&state.decisions[field.key]==='yes').map(field=>localized(field.label));
+ const connectionBlockers=state.connectionBlockers.map(key=>localized(state.fields.find(field=>field.key===key).label));
+ const evidenceBlockers=state.authEvidenceBlockers||[];
+ const missingLabels=state.fields.filter(field=>!state.decisions[field.key]).map(field=>localized(field.label));
+ const review=$('#review-content');
+ review.replaceChildren();
+ appendList(review,text('missingTitle'),missingLabels);
+ appendList(review,text('scopes'),scopes);
+ appendList(review,text('connections'),connectionBlockers);
+ appendList(review,text('evidence'),evidenceBlockers);
+ const status=dirty&&state.planAcknowledgementStatus==='current'?'stale':state.planAcknowledgementStatus;
+ summary.querySelector('.ack-state').textContent=text(status==='current'?'ackCurrent':status==='stale'?'ackStale':'ackMissing');
+ summary.querySelector('.ack-detail').textContent=status==='current'?text('ackCurrentDetail'):state.planAcknowledgementCommand&&!dirty?text('ackReady'):text('ackBlocked');
+ const next=summary.querySelector('.next-step');
+ next.replaceChildren();
+ if(state.planAcknowledgementCommand&&!dirty){next.append(element('strong','',text('next')),element('code','cli-next',state.planAcknowledgementCommand))}
+}
+async function save(event){
+ event.preventDefault();
+ const statuses=$$('.status');
+ statuses.forEach(item=>{item.className='status';item.textContent=text('saving')});
+ try{
+  const response=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({decisions:state.decisions})});
+  const data=await response.json();
+  if(!response.ok)throw Error(data.error);
+  state=data.state;
+  dirty=false;
+  render();
+  $$('.status').forEach(item=>item.textContent=text('saved'));
+ }catch(error){
+  statuses.forEach(item=>{item.className='status error';item.textContent=text('saveFailed')+error.message});
+ }
+}
+async function load(){
+ try{
+  const response=await fetch('/api/state',{cache:'no-store'});
+  if(!response.ok)throw Error();
+  state=await response.json();
+  dirty=false;
+  setLanguage();
+ }catch{
+  const app=$('#app');
+  app.className='fatal';
+  app.textContent=text('error');
+ }
+}
+document.querySelectorAll('[data-lang]').forEach(button=>button.addEventListener('click',()=>{lang=button.dataset.lang;rememberLanguage(lang);setLanguage()}));
+load();
+})();
+</script>
+</body>
+</html>

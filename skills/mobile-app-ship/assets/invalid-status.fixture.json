@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "invalid-transition", "bundleId": "com.example.invalid", "packageName": null},
+  "targets": {
+    "ios": {"state": "UPLOADED", "blocker": null, "history": [
+      {"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]},
+      {"state": "UPLOADED", "at": "2026-01-02T00:00:00Z", "actionId": "act-upload", "evidenceIds": ["ev-upload"]}
+    ]},
+    "android": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]}]}
+  },
+  "actions": [{"id": "act-upload", "intent": "Upload build.", "target": "ios", "tool": "asc", "classification": "external_mutation", "status": "verified", "gateId": null, "verificationQuery": "Read build state.", "evidenceIds": ["ev-upload"]}],
+  "evidence": [
+    {"id": "ev-scope", "claim": "Scope.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "Scope exists.", "limitations": "None."},
+    {"id": "ev-upload", "claim": "Upload command returned.", "source": "tool", "timestamp": "2026-01-02T00:00:00Z", "toolVersion": "asc fixture", "sanitizedResult": "Command exited.", "limitations": "No store read-back."}
+  ],
+  "gates": []
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "invalid-external", "bundleId": "com.example.invalid", "packageName": null},
+  "targets": {
+    "ios": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]}]},
+    "android": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]}]}
+  },
+  "actions": [{"id": "act-submit", "intent": "Submit for review.", "target": "ios", "tool": "asc", "classification": "external_mutation", "status": "verified", "gateId": "gate-submit", "verificationQuery": "Read submission state.", "evidenceIds": []}],
+  "evidence": [{"id": "ev-scope", "claim": "Scope.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "Scope exists.", "limitations": "None."}],
+  "gates": [{"id": "gate-submit", "class": "approval_required", "action": "Submit for review.", "target": "ios", "state": "approved", "approvedAt": "2026-01-02T00:00:00Z"}]
+}

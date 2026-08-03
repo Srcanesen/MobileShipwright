@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.1.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "Example", "bundleId": "com.example.app", "packageName": "com.example.app"},
+  "targets": {
+    "ios": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-ios"]}]},
+    "android": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-android"]}]}
+  },
+  "actions": [{"id": "act-write", "intent": "Create exact store record", "target": "ios", "tool": "asc", "classification": "external_mutation", "status": "planned", "gateId": "gate-write", "verificationQuery": "asc app read-back com.example.app", "evidenceIds": [], "scope": {"resource": "asc:apps/com.example.app", "operation": "app.create", "sideEffects": ["create app record"], "verificationQuery": "asc app read-back com.example.app"}}],
+  "evidence": [
+    {"id": "ev-ios", "claim": "iOS scoped", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "scope recorded", "limitations": ""},
+    {"id": "ev-android", "claim": "Android scoped", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "scope recorded", "limitations": ""}
+  ],
+  "gates": [{"id": "gate-write", "class": "approval_required", "action": "Create exact store record", "target": "ios", "state": "pending", "approvedAt": null, "scope": {"resource": "asc:apps/com.example.app", "operation": "app.create", "sideEffects": ["create app record"], "verificationQuery": "asc app read-back com.example.app"}}]
+}

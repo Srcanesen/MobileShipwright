@@ -1,0 +1,6 @@
+[mcp_servers.revenuecat]
+url = "https://mcp.revenuecat.ai/mcp"
+
+[mcp_servers.xcodebuildmcp]
+command = "xcodebuildmcp"
+args = ["mcp"]

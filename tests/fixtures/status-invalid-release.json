@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "invalid-release-test", "bundleId": "com.example.invalid-release", "packageName": null},
+  "targets": {
+    "ios": {
+      "state": "RELEASED",
+      "blocker": null,
+      "history": [
+        {"state": "APPROVED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-approved"]},
+        {"state": "RELEASED", "at": "2026-01-02T00:00:00Z", "actionId": "act-release", "evidenceIds": ["ev-release"]}
+      ]
+    },
+    "android": {
+      "state": "SCOPED",
+      "blocker": null,
+      "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]}]
+    }
+  },
+  "actions": [
+    {"id": "act-release", "intent": "Release publicly.", "target": "ios", "tool": "asc", "classification": "external_mutation", "status": "verified", "gateId": "gate-rel", "verificationQuery": "Read storefront state.", "evidenceIds": ["ev-release"]}
+  ],
+  "evidence": [
+    {"id": "ev-scope", "claim": "Scope.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "Scope exists.", "limitations": "None."},
+    {"id": "ev-approved", "claim": "Approved.", "source": "store_readback", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": "asc fixture", "sanitizedResult": "Approved.", "limitations": "Not release authorization."},
+    {"id": "ev-release", "claim": "Released.", "source": "tool", "timestamp": "2026-01-02T00:00:00Z", "toolVersion": "asc fixture", "sanitizedResult": "Command exited.", "limitations": "No storefront read-back."}
+  ],
+  "gates": [{"id": "gate-rel", "class": "approval_required", "action": "Release", "target": "ios", "state": "consumed", "approvedAt": "2026-01-02T00:00:00Z"}]
+}

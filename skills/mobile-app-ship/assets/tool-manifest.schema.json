@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schemaVersion", "verifiedOn", "platform", "tools"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "1.1.0"},
+    "verifiedOn": {"type": "string", "format": "date"},
+    "platform": {"const": "macOS arm64"},
+    "tools": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "command", "testedVersion", "ownerDomain", "platforms", "requirement", "sourceUrl", "install"],
+        "properties": {
+          "id": {"type": "string"},
+          "command": {"type": "string"},
+          "testedVersion": {"type": "string"},
+          "ownerDomain": {"type": "string", "minLength": 1},
+          "platforms": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["ios", "android", "shared"]}},
+          "requirement": {"enum": ["required", "optional"]},
+          "macosOnly": {"type": "boolean"},
+          "sourceUrl": {"type": "string", "format": "uri"},
+          "install": {"type": "object", "required": ["macos"], "additionalProperties": false, "properties": {"macos": {"type": "string"}}}
+        }
+      }
+    }
+  }
+}

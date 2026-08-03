@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolkitVersion": "0.1.0",
+  "app": {"name": "example", "bundleId": "com.example.app", "packageName": "com.example.app"},
+  "targets": {
+    "ios": {
+      "state": "LOCALLY_VERIFIED",
+      "blocker": null,
+      "history": [
+        {"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-ios-scope"]},
+        {"state": "IMPLEMENTING", "at": "2026-01-02T00:00:00Z", "actionId": "act-ios-build", "evidenceIds": ["ev-ios-file"]},
+        {"state": "LOCALLY_VERIFIED", "at": "2026-01-03T00:00:00Z", "actionId": "act-ios-build", "evidenceIds": ["ev-ios-test"]}
+      ]
+    },
+    "android": {
+      "state": "SCOPED",
+      "blocker": {"id": "block-android-id", "summary": "Awaiting package-name approval.", "since": "2026-01-01T00:00:00Z", "gateId": "gate-android-id"},
+      "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-android-scope"]}]
+    }
+  },
+  "actions": [
+    {"id": "act-ios-build", "intent": "Implement and locally test the iOS target.", "target": "ios", "tool": "Flutter", "classification": "local_mutation", "status": "verified", "gateId": null, "verificationQuery": "flutter test", "evidenceIds": ["ev-ios-file", "ev-ios-test"]}
+  ],
+  "evidence": [
+    {"id": "ev-ios-scope", "claim": "iOS scope exists.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "SPEC records iOS.", "limitations": "Scope only."},
+    {"id": "ev-ios-file", "claim": "Implementation files exist.", "source": "file", "timestamp": "2026-01-02T00:00:00Z", "toolVersion": null, "sanitizedResult": "Tracked source changed.", "limitations": "Does not prove runtime behavior."},
+    {"id": "ev-ios-test", "claim": "Focused local tests pass.", "source": "tool", "timestamp": "2026-01-03T00:00:00Z", "toolVersion": "Flutter stable", "sanitizedResult": "Test process exited successfully.", "limitations": "Not a distributed-device test."},
+    {"id": "ev-android-scope", "claim": "Android scope exists.", "source": "file", "timestamp": "2026-01-01T00:00:00Z", "toolVersion": null, "sanitizedResult": "SPEC records Android.", "limitations": "Scope only."}
+  ],
+  "gates": [
+    {"id": "gate-android-id", "class": "approval_required", "action": "Approve Android package name.", "target": "android", "state": "pending", "approvedAt": null}
+  ]
+}
