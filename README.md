@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/Srcanesen/MobileShipwright/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/MobileShipwright/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <a href="VERSION"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version 0.1.0"></a>
+  <a href="VERSION"><img src="https://img.shields.io/badge/version-0.2.0-blue.svg" alt="Version 0.2.0"></a>
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="Tested on macOS arm64">
 </p>
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "toolkitVersion": "0.1.0",
+  "toolkitVersion": "0.2.0",
   "app": {"name": "invalid-external", "bundleId": "com.example.invalid", "packageName": null},
   "targets": {
     "ios": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-scope"]}]},
