@@ -7,7 +7,7 @@ body:
       value: |
         **Never paste secrets, credentials, tokens, private keys, signing material, target-app state, or raw vendor responses here.**
 
-        Report suspected security vulnerabilities privately through [SECURITY.md](https://github.com/Srcanesen/mobile-app-ship-playbook/blob/main/SECURITY.md) instead of opening an issue.
+        Report suspected security vulnerabilities privately through [SECURITY.md](https://github.com/Srcanesen/MobileShipwright/blob/main/SECURITY.md) instead of opening an issue.
   - type: input
     id: summary
     attributes:

@@ -1,15 +1,15 @@
 <p align="center">
-  <img src=".github/assets/logo.png" alt="Mobile App Ship Playbook" width="110">
+  <img src=".github/assets/logo.png" alt="MobileShipwright" width="110">
 </p>
 
 <p align="center"><b><a href="README.md">English</a> | <a href="README.tr.md">Türkçe</a></b></p>
 
-<h1 align="center">Mobile App Ship Playbook</h1>
+<h1 align="center">MobileShipwright</h1>
 
-<p align="center">An agent-first, evidence-led playbook for taking Flutter/Firebase mobile apps through independent App Store and Google Play delivery paths.</p>
+<p align="center">An agent-guided mobile release playbook for Flutter and Firebase apps—covering App Store Connect, TestFlight, Google Play, RevenueCat, and safety-gated delivery.</p>
 
 <p align="center">
-  <a href="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
+  <a href="https://github.com/Srcanesen/MobileShipwright/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/MobileShipwright/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   <a href="VERSION"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version 0.1.0"></a>
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="Tested on macOS arm64">
@@ -33,7 +33,7 @@
 The playbook is published as a tested Agent Skill. Install it with the skills CLI:
 
 ```bash
-npx skills add Srcanesen/mobile-app-ship-playbook --skill mobile-app-ship
+npx skills add Srcanesen/MobileShipwright --skill mobile-app-ship
 ```
 
 Tell the agent the target path and desired scope. It must read in this order:
@@ -43,7 +43,7 @@ Tell the agent the target path and desired scope. It must read in this order:
 3. [harness-onboarding.md](skills/mobile-app-ship/references/harness-onboarding.md)
 4. Only the phase or provider references routed by the skill
 
-Use these copy-ready prompts after cloning `https://github.com/Srcanesen/mobile-app-ship-playbook.git` and opening it in your chosen harness.
+Use these copy-ready prompts after cloning `https://github.com/Srcanesen/MobileShipwright.git` and opening it in your chosen harness.
 
 **Existing app**
 

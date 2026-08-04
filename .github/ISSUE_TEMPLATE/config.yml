@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security policy
-    url: https://github.com/Srcanesen/mobile-app-ship-playbook/blob/main/SECURITY.md
+    url: https://github.com/Srcanesen/MobileShipwright/blob/main/SECURITY.md
     about: Report security vulnerabilities privately. Do not open public issues containing secrets or exploit details.
+  - name: Questions and ideas
+    url: https://github.com/Srcanesen/MobileShipwright/discussions
+    about: Ask usage questions, share workflows, and propose improvements.

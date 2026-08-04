@@ -1,15 +1,15 @@
 <p align="center">
-  <img src=".github/assets/logo.png" alt="Mobile App Ship Playbook" width="110">
+  <img src=".github/assets/logo.png" alt="MobileShipwright" width="110">
 </p>
 
 <p align="center"><b><a href="README.md">English</a> | <a href="README.tr.md">Türkçe</a></b></p>
 
-<h1 align="center">Mobile App Ship Playbook</h1>
+<h1 align="center">MobileShipwright</h1>
 
-<p align="center">Flutter/Firebase mobil uygulamalarını App Store ve Google Play'e güvenli, denetlenebilir ve kanıta dayalı biçimde taşımak için agent odaklı bir yayınlama oyun kitabı.</p>
+<p align="center">Flutter ve Firebase uygulamalarını App Store Connect, TestFlight ve Google Play'e güvenli, kanıta dayalı onay kapılarıyla taşıyan agent odaklı mobil yayınlama rehberi.</p>
 
 <p align="center">
-  <a href="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/mobile-app-ship-playbook/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
+  <a href="https://github.com/Srcanesen/MobileShipwright/actions/workflows/validate.yml"><img src="https://github.com/Srcanesen/MobileShipwright/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT lisansı"></a>
   <a href="VERSION"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Sürüm 0.1.0"></a>
   <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="macOS arm64 üzerinde test edildi">
@@ -33,7 +33,7 @@
 Oyun kitabı, test edilmiş bir Agent Skill olarak yayımlanır. Skills CLI ile kurun:
 
 ```bash
-npx skills add Srcanesen/mobile-app-ship-playbook --skill mobile-app-ship
+npx skills add Srcanesen/MobileShipwright --skill mobile-app-ship
 ```
 
 Agent'a hedef yolu ve istenen kapsamı söyleyin. Agent şu sırayla okumalıdır:
@@ -43,7 +43,7 @@ Agent'a hedef yolu ve istenen kapsamı söyleyin. Agent şu sırayla okumalıdı
 3. [harness-onboarding.md](skills/mobile-app-ship/references/harness-onboarding.md)
 4. Yalnızca skill'in yönlendirdiği ilgili faz veya sağlayıcı referansları
 
-`https://github.com/Srcanesen/mobile-app-ship-playbook.git` adresinden klonlayıp tercih ettiğiniz harness içinde açtıktan sonra aşağıdaki hazır prompt'ları kullanın.
+`https://github.com/Srcanesen/MobileShipwright.git` adresinden klonlayıp tercih ettiğiniz harness içinde açtıktan sonra aşağıdaki hazır prompt'ları kullanın.
 
 **Mevcut uygulama**
 
