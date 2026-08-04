@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "toolkitVersion": "0.1.0",
+  "toolkitVersion": "0.2.0",
   "app": {"name": "Example", "bundleId": "com.example.app", "packageName": "com.example.app"},
   "targets": {
     "ios": {"state": "SCOPED", "blocker": null, "history": [{"state": "SCOPED", "at": "2026-01-01T00:00:00Z", "actionId": null, "evidenceIds": ["ev-ios"]}]},
