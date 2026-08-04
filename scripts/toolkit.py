@@ -1616,15 +1616,16 @@ def apply_status_transaction(current: dict, transaction: object, approval_gate: 
         if (before.get("state") in {"approved", "consumed"} and before.get("scope") != after.get("scope")
                 and not legacy_scope_reapproval):
             raise ValueError("approved or consumed gate scope cannot change")
-        if before.get("state") == after.get("state") and fields:
+        if (gate_id == consume_gate
+                or (before.get("state") == "approved" and after.get("state") == "consumed")):
+            if fields - {"state"}:
+                raise ValueError("consumption may change only gate state")
+        elif before.get("state") == after.get("state") and fields:
             if not legacy_scope_reapproval or fields - {"scope", "approvedAt"}:
                 raise ValueError("gate updates require an approval transition")
         elif before.get("state") == "pending" and after.get("state") == "approved":
             if fields - {"state", "approvedAt", "scope"}:
                 raise ValueError("approval may change only gate state, timestamp, and scope")
-        elif before.get("state") == "approved" and after.get("state") == "consumed":
-            if fields - {"state"}:
-                raise ValueError("consumption may change only gate state")
         elif not legacy_scope_reapproval:
             raise ValueError("unsupported gate state transition")
 
@@ -1637,14 +1638,15 @@ def apply_status_transaction(current: dict, transaction: object, approval_gate: 
             bool(approval_gate) and old_status == "approved" and new_status == "approved"
             and before.get("scope") is None and after.get("scope") is not None
         )
-        if old_status == new_status:
+        if ((consume_gate and before.get("gateId") == consume_gate)
+                or (old_status, new_status) == ("approved", "started")):
+            allowed = {"status"}
+        elif old_status == new_status:
             if not legacy_scope_reapproval:
                 raise ValueError("action updates require a status transition")
             allowed = {"scope", "verificationQuery"}
         elif (old_status, new_status) == ("planned", "approved"):
             allowed = {"status", "scope", "verificationQuery"}
-        elif (old_status, new_status) == ("approved", "started"):
-            allowed = {"status"}
         elif old_status in {"started", "outcome_unknown"} and new_status in terminal_statuses:
             allowed = {"status", "evidenceIds"}
             if not set(before.get("evidenceIds", [])).issubset(set(after.get("evidenceIds", []))):

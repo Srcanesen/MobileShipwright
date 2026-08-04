@@ -99,8 +99,8 @@ def write_auth_progress(target: str) -> None:
     (Path(target) / kit.PROGRESS).write_text(json.dumps({"schemaVersion": "1.0.0", "steps": steps}), encoding="utf-8")
 
 
-def read_status_fixture() -> dict:
-    return json.loads((ROOT / "tests/fixtures/status-valid.json").read_text(encoding="utf-8"))
+def read_status_fixture(name: str = "status-valid.json") -> dict:
+    return json.loads((ROOT / "tests/fixtures" / name).read_text(encoding="utf-8"))
 
 
 class ToolkitSafetyTests(unittest.TestCase):
@@ -214,6 +214,71 @@ class ToolkitSafetyTests(unittest.TestCase):
         dup_history["targets"]["ios"]["history"][1]["evidenceIds"] = ["ev-build", "ev-build"]
         self.assertIn("duplicate history evidenceIds: ios", validator.status_errors(dup_history))
         self.assertEqual(validator.status_errors(read_status_fixture()), [])
+
+    def test_status_safety_contract(self) -> None:
+        valid = read_status_fixture()
+        structured = read_status_fixture("status-structured.json")
+        cases = [
+            (valid, lambda data: data.update(schemaVersion="2.0.0"), "status versions"),
+            (valid, lambda data: data["targets"]["ios"].update(state="UNKNOWN"), "target shape/state: ios"),
+            (valid, lambda data: data["targets"]["ios"].update(state="IMPLEMENTING"), "history/current mismatch: ios"),
+            (valid, lambda data: data["evidence"][0].pop("limitations"), "evidence shape"),
+            (valid, lambda data: data["evidence"].append(copy.deepcopy(data["evidence"][0])), "duplicate evidence id: ev-scope"),
+            (valid, lambda data: data["actions"][0].update(evidenceIds=["ev-missing"]), "action evidence reference: act-build"),
+            (valid, lambda data: data["actions"][0].update(status="unknown"), "action enum: act-build"),
+            (valid, lambda data: data["targets"]["ios"]["history"][1].update(state="DISTRIBUTION_READY"), "illegal lifecycle jump: ios SCOPED->DISTRIBUTION_READY"),
+            (structured, lambda data: data["gates"][0].pop("action"), "gate shape"),
+            (structured, lambda data: data["gates"][0].update(state="unknown"), "gate enum: gate-write"),
+            (structured, lambda data: data["gates"].append(copy.deepcopy(data["gates"][0])), "duplicate gate id: gate-write"),
+            (structured, lambda data: (data["gates"][0].update(state="approved"), data["actions"][0].update(status="approved")), "approved gate lacks timestamp: gate-write"),
+            (structured, lambda data: (data["gates"][0].update(state="consumed", approvedAt="2026-01-02T00:00:00Z"), data["actions"][0].update(status="verified")), "verified external mutation lacks query/evidence: act-write"),
+        ]
+        released = copy.deepcopy(structured)
+        released["evidence"].append({"id": "ev-release", "claim": "Release visible", "source": "store_readback", "timestamp": "2026-01-15T00:00:00Z", "toolVersion": "test", "sanitizedResult": "Release verified", "limitations": ""})
+        released["gates"][0].update(state="consumed", approvedAt="2026-01-14T00:00:00Z")
+        released["actions"][0].update(status="verified", evidenceIds=["ev-release"])
+        released["targets"]["ios"]["state"] = "RELEASED"
+        released["targets"]["ios"]["history"] = [
+            {"state": state, "at": f"2026-01-{index:02d}T00:00:00Z", "actionId": "act-write" if state == "RELEASED" else None, "evidenceIds": ["ev-release" if state == "RELEASED" else "ev-ios"]}
+            for index, state in enumerate(validator.STATES, 1)
+        ]
+        self.assertEqual(validator.status_errors(released), [])
+        cases.extend((
+            (released, lambda data: data["targets"]["ios"]["history"].pop(-2), "RELEASED lacks RELEASE_AUTHORIZED history: ios"),
+            (released, lambda data: data["actions"][0].update(status="failed"), "RELEASED lacks verified release action: ios"),
+            (released, lambda data: data["evidence"][-1].update(source="file"), "RELEASED lacks release evidence: ios"),
+        ))
+        for base, change, expected in cases:
+            with self.subTest(expected=expected):
+                data = copy.deepcopy(base); change(data)
+                self.assertIn(expected, validator.status_errors(data))
+
+        empty = {"append": {"actions": [], "gates": [], "evidence": []}, "update": {"actions": [], "gates": [], "evidence": []}}
+        secret = copy.deepcopy(empty)
+        secret["append"]["actions"] = [{"id": "act-transaction", "intent": "token=supersecret12", "target": "ios", "tool": "test", "classification": "inspect", "status": "planned", "gateId": None, "verificationQuery": "local inspection", "evidenceIds": []}]
+        benign = copy.deepcopy(empty)
+        benign["append"]["actions"] = [{"id": "act-transaction", "intent": "Inspect local state", "target": "ios", "tool": "test", "classification": "inspect", "status": "planned", "gateId": None, "verificationQuery": "local inspection", "evidenceIds": []}]
+        empty["update"]["evidence"] = [structured["evidence"][0]]
+        transaction_cases = [
+            (structured, secret, None, None, "possible secret"),
+            (structured, empty, None, None, "append-only"),
+            (structured, benign, "gate-write", "gate-write", "choose one transition flag"),
+        ]
+        local = copy.deepcopy(structured)
+        local["actions"][0]["classification"] = "local_mutation"
+        for gate_state, action_status in (("pending", "approved"), ("approved", "planned")):
+            current = copy.deepcopy(local)
+            current["gates"][0].update(state=gate_state, approvedAt="2026-01-02T00:00:00Z")
+            current["actions"][0]["status"] = action_status
+            self.assertEqual(validator.status_errors(current), [])
+            gate = copy.deepcopy(current["gates"][0]); gate["state"] = "consumed"
+            action = copy.deepcopy(current["actions"][0]); action["status"] = "started"
+            transaction = {"append": {"actions": [], "gates": [], "evidence": []}, "update": {"actions": [action], "gates": [gate], "evidence": []}}
+            transaction_cases.append((current, transaction, None, "gate-write", "consume-gate requires"))
+        for current, transaction, approval_gate, consume_gate, message in transaction_cases:
+            with self.subTest(message=message):
+                with self.assertRaisesRegex(ValueError, message):
+                    kit.apply_status_transaction(current, transaction, approval_gate, consume_gate)
 
     def test_onboard_web_is_strict_bilingual_and_local(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -880,7 +945,7 @@ class ToolkitSafetyTests(unittest.TestCase):
         self.assertIn("langLabel:'Dil'", html)
 
     def test_structured_status_writer_and_coverage_are_safe(self) -> None:
-        structured = json.loads((ROOT / "tests/fixtures/status-structured.json").read_text(encoding="utf-8"))
+        structured = read_status_fixture("status-structured.json")
         self.assertEqual(validator.status_errors(structured), [])
         for mutate in (lambda data: data["gates"][0].pop("scope"), lambda data: data["gates"][0]["scope"].update(resource="asc:other"), lambda data: data["gates"][0].update(state="approved", approvedAt="2026-01-02T00:00:00Z")):
             invalid = copy.deepcopy(structured); mutate(invalid)
@@ -920,7 +985,7 @@ class ToolkitSafetyTests(unittest.TestCase):
             self.assertEqual(cli("status-write", "--target", tmp, "--expect-sha256", "0" * 64, "--transaction", "-").returncode, 2)
 
     def test_approved_legacy_scope_requires_fresh_approval_and_can_consume(self) -> None:
-        structured = json.loads((ROOT / "tests/fixtures/status-structured.json").read_text(encoding="utf-8"))
+        structured = read_status_fixture("status-structured.json")
         legacy = copy.deepcopy(structured)
         legacy["schemaVersion"] = "1.0.0"
         legacy["actions"][0]["status"] = "approved"
