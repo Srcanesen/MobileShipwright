@@ -62,7 +62,9 @@ Run this right before submitting for review. Go through every item against **thi
 
 ### Physical-device and distributed-build evidence
 - Test auth, purchase + restore, push, camera/permissions, persistence, consent withdrawal, and deletion on a physical device from TestFlight/Play distribution.
+- For IAP, the physical sandbox test must assert that tapping Buy opens the StoreKit purchase sheet, then completes and cancels visibly; verify the button recovers and non-cancel failures show localized retry feedback. Product and price visibility alone is insufficient.
 - Confirm no first-frame stall, infinite loading state, raw exception, or false "offline" message.
+- If App Review reports that a product and price loaded but Buy did nothing, treat the app rejection as primary; an associated IAP rejection can be secondary. Inspect the displayed-package purchase path before changing store metadata.
 
 ### Support URL & Age Rating
 - **Support URL** (`/support.html`) set for all localizations, returns HTTP 200.

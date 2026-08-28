@@ -984,6 +984,37 @@ class ToolkitSafetyTests(unittest.TestCase):
             target = Path(tmp); (target / "real").write_text("{}", encoding="utf-8"); (target / "STATUS.json").symlink_to(target / "real")
             self.assertEqual(cli("status-write", "--target", tmp, "--expect-sha256", "0" * 64, "--transaction", "-").returncode, 2)
 
+    def test_cancellation_state_contract_rejects_unsafe_history_rewrites(self) -> None:
+        structured = read_status_fixture("status-structured.json")
+        canceled = copy.deepcopy(structured)
+        canceled["actions"][0]["status"] = "canceled"
+        canceled["gates"][0]["state"] = "revoked"
+        self.assertEqual(validator.status_errors(canceled), [])
+
+        for group, state in (("actions", "planned"), ("gates", "pending")):
+            one_sided = copy.deepcopy(canceled)
+            one_sided[group][0]["status" if group == "actions" else "state"] = state
+            self.assertIn("structured gate state mismatch: act-write", validator.status_errors(one_sided))
+
+        reused = copy.deepcopy(canceled)
+        duplicate = copy.deepcopy(reused["actions"][0])
+        duplicate["id"] = "act-other"
+        reused["actions"].append(duplicate)
+        self.assertIn("gate linkage reused: gate-write", validator.status_errors(reused))
+
+        for status in ("started", "outcome_unknown"):
+            with self.subTest(status=status):
+                current = copy.deepcopy(structured)
+                current["actions"][0]["status"] = status
+                current["gates"][0].update(state="consumed", approvedAt="2026-01-02T00:00:00Z")
+                self.assertEqual(validator.status_errors(current), [])
+                transaction = {
+                    "append": {"actions": [], "gates": [], "evidence": []},
+                    "update": {"actions": canceled["actions"], "gates": canceled["gates"], "evidence": []},
+                }
+                with self.assertRaisesRegex(ValueError, "unsupported gate state transition"):
+                    kit.apply_status_transaction(current, transaction, None, None)
+
     def test_approved_legacy_scope_requires_fresh_approval_and_can_consume(self) -> None:
         structured = read_status_fixture("status-structured.json")
         legacy = copy.deepcopy(structured)

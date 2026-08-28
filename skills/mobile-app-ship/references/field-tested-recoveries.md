@@ -127,6 +127,10 @@ Most durable rows are now enforced by the semantic validator's prevention contra
 | O6 | Workflow | Worker over-compressed guidance or stopped early | Handoff compression | Inspect the real diff, test counts, and required tokens; reject the incomplete handoff; do not codify as product behavior | Diff plus test evidence reviewed | Ledger-only (process) |
 | O7 | Workflow | Model/provider region or overload failures | Infrastructure | Classify; stop repeated blind retry; change provider/model only with user direction; this is not a shipping rule | State check before any re-run | Ledger-only (infrastructure) |
 
+## App Review IAP recovery note
+
+Field evidence: the product and price were visible and Buy was enabled, but tapping Buy produced no visible purchase flow. Recover this as an app purchase-path failure: pass the displayed `Package` directly to purchase, do not fetch offerings again, and keep success, cancellation, and operational failure distinct. An offline callback seam must prove the same package is passed once and non-cancel failure restores the button with localized retry feedback; the physical sandbox check must prove the purchase sheet opens and complete/cancel paths are visible.
+
 ## Durable invariants
 
 - **Vendor read-back** — a mutation is verified only by reading the vendor state, never by the tool's own report or exit code.

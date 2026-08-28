@@ -45,6 +45,10 @@ final res = await Purchases.purchase(PurchaseParams.package(pkg));
 final active = res.customerInfo.entitlements.active.containsKey('premium');
 ```
 
+## Purchase flow invariant
+
+Pass the exact `Package` used to render the price into `Purchases.purchase`; never call `getOfferings()` again after Buy is tapped. Model success, user cancellation, and operational failure as separate outcomes; never collapse a non-cancel error into a silent `false` result. Success requires an active `premium` entitlement. Cancellation may stay quiet, but every other failure must reset the button and show localized, actionable retry feedback. Product and price visibility alone does not prove that Buy works.
+
 ## Server-verified, client-invoked grant pattern
 
 Do **not** trust `{productId}` or a client entitlement boolean as proof of payment. After the SDK reports success, call a thin authenticated server function with the minimum purchase/customer identifiers supported by the current RevenueCat/store APIs. The server must:
